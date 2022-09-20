@@ -21,7 +21,11 @@ position and angle
 
 ## todo
 -- make function for converting regular floats to fixed point precision floats with 16 int bits and 16 bits for fractional part
+
 -- make spi controller (koke?)
+
 -- simple move and rotation functions for player
+
 -- IO code for buttons
+
 -- simple move function for enemies
