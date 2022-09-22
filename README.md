@@ -1,25 +1,33 @@
 # mcu
 
-## setup
-install simplicity studio or GNU Arm Embedded Toolchain
+## Setup
+
+1. Clone the repository
+2. Clone submodules with `git submodule update --init --recursive`
+3. Install Simplicity Studio or GNU Arm Embedded Toolchain
 
 ## Memory
+
 for floats we can use standard floats on the mcu but they will need to be converted to fixed point floats
 
 ### Map
+
 map will consist of a 64 x 64 grid of blocks
 each block will be represented by 16 bits, 8 for state and 8 for texture id
 
 ### Sprites
+
 angle and position for each enemy (how many enemies?)
 position: 2 floats
 angle: 1 float
 sprite texture (16 x 16 pixels, 16 bits for each pixel)
 
 ### Player
-position and angle 
+
+position and angle
 
 ## todo
+
 -- make function for converting regular floats to fixed point precision floats with 16 int bits and 16 bits for fractional part
 
 -- make spi controller (koke?)
