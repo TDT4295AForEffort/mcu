@@ -2,9 +2,14 @@
 
 ## Setup
 
-1. Clone the repository
-2. Clone submodules with `git submodule update --init --recursive`
-3. Install Simplicity Studio or GNU Arm Embedded Toolchain
+the project only contains .c and .h files as simplicity studio files cannot be copy pasted to different machines and still compile :( all project files are ignored
+
+1. Install Simplicity Studio or GNU Arm Embedded Toolchain
+2. Make a new empty project for Giant gecko with GNU ARM build tools
+3. git init
+4. add this repo as remote origin
+5. git pull
+6. success?
 
 ## Memory
 
