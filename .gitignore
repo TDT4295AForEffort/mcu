@@ -1,9 +1,12 @@
-*
-
-!*.c
-!*.h
-!.git
-!.gitignore
-!README.md
-
+.project
+.pdm
+.projectlinkstore
+.settings
+.cproject
+*.pintool
+*.slcp
+*.slps
+config
+autogen
+'GNU ARM v10.3.1 - Debug'
 gecko_sdk_4.1.1
