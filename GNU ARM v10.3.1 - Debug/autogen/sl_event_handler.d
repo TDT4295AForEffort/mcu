@@ -64,8 +64,8 @@ autogen/sl_event_handler.o: ../autogen/sl_event_handler.c \
  /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/common/inc/sl_assert.h \
  /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/emlib/inc/em_bus.h \
  /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/emlib/inc/em_core.h \
- /home/kasper/SimplicityStudio/v5_workspace/usart/autogen/sl_component_catalog.h \
- /home/kasper/SimplicityStudio/v5_workspace/usart/config/emlib_core_debug_config.h \
+ /home/kasper/SimplicityStudio/v5_workspace/mcu/autogen/sl_component_catalog.h \
+ /home/kasper/SimplicityStudio/v5_workspace/mcu/config/emlib_core_debug_config.h \
  /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/common/inc/sl_enum.h \
  /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/service/device_init/inc/sl_device_init_nvic.h \
  /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/common/inc/sl_status.h \
@@ -140,8 +140,8 @@ autogen/sl_event_handler.o: ../autogen/sl_event_handler.c \
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/common/inc/sl_assert.h:
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/emlib/inc/em_bus.h:
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/emlib/inc/em_core.h:
-/home/kasper/SimplicityStudio/v5_workspace/usart/autogen/sl_component_catalog.h:
-/home/kasper/SimplicityStudio/v5_workspace/usart/config/emlib_core_debug_config.h:
+/home/kasper/SimplicityStudio/v5_workspace/mcu/autogen/sl_component_catalog.h:
+/home/kasper/SimplicityStudio/v5_workspace/mcu/config/emlib_core_debug_config.h:
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/common/inc/sl_enum.h:
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/service/device_init/inc/sl_device_init_nvic.h:
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/common/inc/sl_status.h:

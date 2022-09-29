@@ -17,6 +17,7 @@ C_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 autogen \
+. \
 gecko_sdk_4.1.1/hardware/board/src \
 gecko_sdk_4.1.1/platform/Device/SiliconLabs/EFM32GG/Source \
 gecko_sdk_4.1.1/platform/common/src \
@@ -24,5 +25,4 @@ gecko_sdk_4.1.1/platform/common/toolchain/src \
 gecko_sdk_4.1.1/platform/emlib/src \
 gecko_sdk_4.1.1/platform/service/device_init/src \
 gecko_sdk_4.1.1/platform/service/system/src \
-. \
 

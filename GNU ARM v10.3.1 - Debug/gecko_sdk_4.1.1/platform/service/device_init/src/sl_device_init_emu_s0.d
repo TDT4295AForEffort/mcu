@@ -64,8 +64,8 @@ gecko_sdk_4.1.1/platform/service/device_init/src/sl_device_init_emu_s0.o: \
  /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/emlib/inc/em_core.h \
  /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/common/inc/sl_common.h \
  /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/common/inc/sl_assert.h \
- /home/kasper/SimplicityStudio/v5_workspace/usart/autogen/sl_component_catalog.h \
- /home/kasper/SimplicityStudio/v5_workspace/usart/config/emlib_core_debug_config.h
+ /home/kasper/SimplicityStudio/v5_workspace/mcu/autogen/sl_component_catalog.h \
+ /home/kasper/SimplicityStudio/v5_workspace/mcu/config/emlib_core_debug_config.h
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/common/toolchain/inc/sl_gcc_preinclude.h:
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/service/device_init/inc/sl_device_init_emu.h:
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/common/inc/sl_status.h:
@@ -130,5 +130,5 @@ gecko_sdk_4.1.1/platform/service/device_init/src/sl_device_init_emu_s0.o: \
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/emlib/inc/em_core.h:
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/common/inc/sl_common.h:
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/common/inc/sl_assert.h:
-/home/kasper/SimplicityStudio/v5_workspace/usart/autogen/sl_component_catalog.h:
-/home/kasper/SimplicityStudio/v5_workspace/usart/config/emlib_core_debug_config.h:
+/home/kasper/SimplicityStudio/v5_workspace/mcu/autogen/sl_component_catalog.h:
+/home/kasper/SimplicityStudio/v5_workspace/mcu/config/emlib_core_debug_config.h:

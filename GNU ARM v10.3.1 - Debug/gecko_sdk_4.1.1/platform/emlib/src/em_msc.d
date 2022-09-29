@@ -62,8 +62,8 @@ gecko_sdk_4.1.1/platform/emlib/src/em_msc.o: \
  /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/emlib/inc/em_core.h \
  /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/common/inc/sl_common.h \
  /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/common/inc/sl_assert.h \
- /home/kasper/SimplicityStudio/v5_workspace/usart/autogen/sl_component_catalog.h \
- /home/kasper/SimplicityStudio/v5_workspace/usart/config/emlib_core_debug_config.h \
+ /home/kasper/SimplicityStudio/v5_workspace/mcu/autogen/sl_component_catalog.h \
+ /home/kasper/SimplicityStudio/v5_workspace/mcu/config/emlib_core_debug_config.h \
  /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/emlib/inc/em_msc_compat.h \
  /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/emlib/inc/em_ramfunc.h \
  /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/emlib/inc/em_cmu.h \
@@ -134,8 +134,8 @@ gecko_sdk_4.1.1/platform/emlib/src/em_msc.o: \
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/emlib/inc/em_core.h:
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/common/inc/sl_common.h:
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/common/inc/sl_assert.h:
-/home/kasper/SimplicityStudio/v5_workspace/usart/autogen/sl_component_catalog.h:
-/home/kasper/SimplicityStudio/v5_workspace/usart/config/emlib_core_debug_config.h:
+/home/kasper/SimplicityStudio/v5_workspace/mcu/autogen/sl_component_catalog.h:
+/home/kasper/SimplicityStudio/v5_workspace/mcu/config/emlib_core_debug_config.h:
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/emlib/inc/em_msc_compat.h:
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/emlib/inc/em_ramfunc.h:
 /home/kasper/SimplicityStudio/SDKs/gecko_sdk//platform/emlib/inc/em_cmu.h:

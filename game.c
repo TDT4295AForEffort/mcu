@@ -26,10 +26,10 @@ void move_backward(Player* player, float dt) {
 void init_map(GameBlock** map) {
   for (int i = 0; i < GAME_MAP_SIZE; i++) {
       //fill borders with wall
-      map[0][i] = 1;
-      map[GAME_MAP_SIZE-1][i] = 1;
-      map[i][0] = 1;
-      map[i][GAME_MAP_SIZE-1] = 1;
+      map[0][i].state = 1;
+      map[GAME_MAP_SIZE-1][i].state = 1;
+      map[i][0].state = 1;
+      map[i][GAME_MAP_SIZE-1].state = 1;
   }
   //TODO: fill some random blocks?
 }

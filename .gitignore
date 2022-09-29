@@ -1,0 +1,9 @@
+*
+
+!*.c
+!*.h
+!.git
+!.gitignore
+!README.md
+
+gecko_sdk_4.1.1
