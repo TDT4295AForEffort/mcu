@@ -5,7 +5,7 @@
 the project only contains .c and .h files as simplicity studio files cannot be copy pasted to different machines and still compile :( all project files are ignored
 
 1. Install Simplicity Studio or GNU Arm Embedded Toolchain
-2. Make a new empty project for Giant gecko with GNU ARM build tools
+2. Make a new empty project with GNU ARM build tools and `EFM32 Giant Gecko Starter Kit Board (BRD2200A Rev A03)` as the target board
 3. git init
 4. add this repo as remote origin
 5. git pull
