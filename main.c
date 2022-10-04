@@ -32,7 +32,7 @@
 #include "spi.h"
 #include "usart.h"
 
-char transmitBuffer[] = "hello my name is mister buffer";
+char transmitBuffer[] = "hello my name is mister buffer\n";
 #define            BUFFERSIZE    (sizeof(transmitBuffer) / sizeof(char))
 
 void init(void) {
@@ -128,7 +128,7 @@ int main(void)
     // Do not remove this call: Silicon Labs components process action routine
     // must be called from the super loop.
     sl_system_process_action();
-    //USART1_sendBuffer(transmitBuffer, BUFFERSIZE);
+    USART1_sendBuffer(transmitBuffer, BUFFERSIZE);
     ITM_SendChar('a');
     // Application process.
 
