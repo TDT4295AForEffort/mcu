@@ -32,8 +32,9 @@
 #include "spi.h"
 #include "usart.h"
 
-char transmitBuffer[] = "hello my name is mister buffer";
-#define            BUFFERSIZE    (sizeof(transmitBuffer) / sizeof(char))
+char transmitBuffer[] = "hello my name is mister buffer\n";
+#define            BUFFERSIZE    64
+char receiveBuffer[BUFFERSIZE];
 
 void init(void) {
   /* Enabling clock to USART 1 and 2*/
@@ -44,17 +45,16 @@ void init(void) {
 
     //master setup
     /* Setup USART */
-    SPI_setup(USART1_NUM, GPIO_POS1, true);
+    //SPI_setup(USART1_NUM, GPIO_POS1, true);
 
     /* Setting up RX interrupt for master */
-    SPI1_setupRXInt(NO_RX, NO_RX);
+    //SPI1_setupRXInt(NO_RX, NO_RX);
 
     //slave setup
-    /*
-    SPI_setup(USART1_NUM, GPIO_POS1, true);
 
-    SPI1_setupRXInt(NO_RX, NO_RX);
-    */
+    SPI_setup(USART1_NUM, GPIO_POS1, false);
+    SPI1_setupSlaveInt(receiveBuffer, BUFFERSIZE, NO_TX, NO_TX);
+    memset(receiveBuffer, '\0', BUFFERSIZE);
 }
 
 void setupSWOForPrint(void)
@@ -129,7 +129,12 @@ int main(void)
     // must be called from the super loop.
     sl_system_process_action();
     //USART1_sendBuffer(transmitBuffer, BUFFERSIZE);
-    ITM_SendChar('a');
+    for (unsigned int i = 0; i < BUFFERSIZE; i++) {
+        ITM_SendChar(receiveBuffer[i]);
+
+    }
+    //ITM_SendChar('\n');
+    //memset(receiveBuffer, '\0', BUFFERSIZE);
     // Application process.
 
 
