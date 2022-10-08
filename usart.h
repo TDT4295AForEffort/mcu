@@ -16,7 +16,7 @@
 #define GPIO_POS2                2
 
 
-void USART2_sendBuffer(char*, int);
-void USART1_sendBuffer(char*, int);
+void USART2_sendBuffer(uint8_t*, int);
+void USART1_sendBuffer(uint8_t*, int);
 
 #endif

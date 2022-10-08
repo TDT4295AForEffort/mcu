@@ -31,10 +31,20 @@
 #include "em_cmu.h"
 #include "spi.h"
 #include "usart.h"
+#include "game.h"
+#include "serialize.h"
+#include "stdint.h"
+#include <stdlib.h>
 
-char transmitBuffer[] = "hello my name is mister buffer\n";
-#define            BUFFERSIZE    64
-char receiveBuffer[BUFFERSIZE];
+#define BUFFERSIZE sizeof(Player)//20 bytes
+
+uint8_t transmitBuffer/*[]*/[BUFFERSIZE];// = "hello my name is mister buffer, let the games begin!\n";
+uint8_t receiveBuffer[BUFFERSIZE];
+Player *test_transmit_player;
+Player *test_recieve_player;
+
+TestStruct *transmit_test;
+TestStruct *receive_test;
 
 void init(void) {
   /* Enabling clock to USART 1 and 2*/
@@ -42,19 +52,37 @@ void init(void) {
     CMU_ClockEnable(cmuClock_USART2, true);
     CMU_ClockEnable(cmuClock_GPIO, true);
 
+    test_transmit_player = malloc(BUFFERSIZE);
+    test_transmit_player->x_pos = 16.4;
+    test_transmit_player->y_pos = 4.3;
+    test_transmit_player->vision_angle = 2.7;
+    test_transmit_player->x_dir = 3.8;
+    test_transmit_player->y_dir = 6.8;
+
+    transmit_test = malloc(BUFFERSIZE);
+    transmit_test->one = 1;
+    transmit_test->two = 2;
+    transmit_test->three = 3;
+    transmit_test->four = 4;
+    transmit_test->five = 5;
+
+
+    populate_spi_transmit_buffer(test_transmit_player, transmitBuffer);
+    //populate_spi_transmit_buffer_test(transmit_test, transmitBuffer);
+
 
     //master setup
     /* Setup USART */
-    //SPI_setup(USART1_NUM, GPIO_POS1, true);
+    SPI_setup(USART1_NUM, GPIO_POS1, true);
 
     /* Setting up RX interrupt for master */
-    //SPI1_setupRXInt(NO_RX, NO_RX);
+    SPI1_setupRXInt(NO_RX, NO_RX);
 
     //slave setup
 
-    SPI_setup(USART1_NUM, GPIO_POS1, false);
+    /*SPI_setup(USART1_NUM, GPIO_POS1, false);
     SPI1_setupSlaveInt(receiveBuffer, BUFFERSIZE, NO_TX, NO_TX);
-    memset(receiveBuffer, '\0', BUFFERSIZE);
+    memset(receiveBuffer, '\0', BUFFERSIZE);*/
 }
 
 void setupSWOForPrint(void)
@@ -65,7 +93,7 @@ void setupSWOForPrint(void)
   /* Enable Serial wire output pin */
   GPIO->ROUTE |= GPIO_ROUTE_SWOPEN;
 
-#if defined(_EFM32_GIANT_FAMILY) || defined(_EFM32_LEOPARD_FAMILY) || defined(_EFM32_WONDER_FAMILY)
+  #if defined(_EFM32_GIANT_FAMILY) || defined(_EFM32_LEOPARD_FAMILY) || defined(_EFM32_WONDER_FAMILY)
   /* Set location 0 */
   GPIO->ROUTE = (GPIO->ROUTE & ~(_GPIO_ROUTE_SWLOCATION_MASK)) | GPIO_ROUTE_SWLOCATION_LOC0;
 
@@ -100,7 +128,6 @@ void setupSWOForPrint(void)
   ITM->TER  = 0x1;
 }
 
-
 int main(void)
 {
   // Initialize Silicon Labs device, system, service(s) and protocol stack(s).
@@ -122,21 +149,52 @@ int main(void)
 
 
 
-
   while (1) {
 
     // Do not remove this call: Silicon Labs components process action routine
     // must be called from the super loop.
     sl_system_process_action();
-    //USART1_sendBuffer(transmitBuffer, BUFFERSIZE);
-    for (unsigned int i = 0; i < BUFFERSIZE; i++) {
-        ITM_SendChar(receiveBuffer[i]);
 
+    //For master to send
+    USART1_sendBuffer(transmitBuffer, BUFFERSIZE);
+
+    //Bind the received buffer as a struct
+    //test_recieve_player = (Player*)receiveBuffer;
+    //receive_test = (TestStruct*) transmitBuffer;
+
+    //For slave to write what it receives into SWO
+    for (unsigned int i = 0; i < BUFFERSIZE; i++) {
+        //ITM_SendChar(receiveBuffer[i]); // This sends the recieve buffer to the SWO
+        //ITM_SendChar( (int)test_transmit_player->x_pos +'0'); //This one sends a row of a single char to the SWO for debugging purposes
+        //ITM_SendChar((int)test_recieve_player->x_pos+'0');
+        //ITM_SendChar((int)((float)test_recieve_player->x_pos / (float)(1 << 16))+'0');
+        //ITM_SendChar(((int)receive_test->one)+'0');
+        //ITM_SendChar(transmitBuffer[i]+'0');
+        ITM_SendChar(receiveBuffer[i]+'0');
     }
+    ITM_SendChar('\n');
+    ITM_SendChar('b');
+    ITM_SendChar('\n');
+
+
+    for (unsigned int i = 0; i < BUFFERSIZE; i++) {
+        //ITM_SendChar(receiveBuffer[i]); // This sends the recieve buffer to the SWO
+        //ITM_SendChar( (int)test_transmit_player->x_pos +'0'); //This one sends a row of a single char to the SWO for debugging purposes
+        //ITM_SendChar((int)test_recieve_player->x_pos+'0');
+        //ITM_SendChar((int)((float)test_recieve_player->x_pos / (float)(1 << 16))+'0');
+        //ITM_SendChar(((int)receive_test->one)+'0');
+        //uint32_t test_int = (uint32_t)*(test_transmit_player+i);
+        //ITM_SendChar((int)((float)transmitBuffer[i]/ (float)(1 << 16)) +'0');
+        ITM_SendChar(transmitBuffer[i] +'0');
+    }
+    ITM_SendChar('\n');
+
     //ITM_SendChar('\n');
     //memset(receiveBuffer, '\0', BUFFERSIZE);
     // Application process.
-
+    //test_recieve_player = (Player*)receiveBuffer;
+    //printf("x_pos %f", test_recieve_player->x_pos);
+    //printf("x_pos %f", test_transmit_player->x_pos);
 
   }
 }

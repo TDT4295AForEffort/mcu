@@ -48,13 +48,13 @@
 
 
 /* Buffer pointers and indexes */
-char* slaveTxBuffer;
+uint8_t* slaveTxBuffer;
 int slaveTxBufferSize;
 volatile int slaveTxBufferIndex;
-char* slaveRxBuffer;
+uint8_t* slaveRxBuffer;
 int slaveRxBufferSize;
 volatile int slaveRxBufferIndex;
-char* masterRxBuffer;
+uint8_t* masterRxBuffer;
 int masterRxBufferSize;
 volatile int masterRxBufferIndex;
 
@@ -197,7 +197,7 @@ void SPI_setup(uint8_t spiNumber, uint8_t location, bool master)
  * @param receiveBuffer points to where to place recieved data
  * @param receiveBufferSize indicates the number of bytes to receive
  *****************************************************************************/
-void SPI1_setupRXInt(char* receiveBuffer, int receiveBufferSize)
+void SPI1_setupRXInt(uint8_t* receiveBuffer, int receiveBufferSize)
 {
   USART_TypeDef *spi = USART1;
 
@@ -222,7 +222,7 @@ void SPI1_setupRXInt(char* receiveBuffer, int receiveBufferSize)
  * @param transmitBuffer points to the data to send
  * @param transmitBufferSize indicates the number of bytes to send
  *****************************************************************************/
-void SPI1_setupTXInt(char* transmitBuffer, int transmitBufferSize)
+void SPI1_setupTXInt(uint8_t* transmitBuffer, int transmitBufferSize)
 {
   USART_TypeDef *spi = USART1;
 
@@ -247,7 +247,7 @@ void SPI1_setupTXInt(char* transmitBuffer, int transmitBufferSize)
  * @param receiveBuffer points to where received data is to be stored
  * @param bytesToReceive indicates the number of bytes to receive
  *****************************************************************************/
-void SPI2_setupRXInt(char* receiveBuffer, int bytesToReceive)
+void SPI2_setupRXInt(uint8_t* receiveBuffer, int bytesToReceive)
 {
   USART_TypeDef *spi = USART2;
 
@@ -274,7 +274,7 @@ void SPI2_setupRXInt(char* receiveBuffer, int bytesToReceive)
  * @param transmitBuffer points to the data to send
  * @param transmitBufferSize indicates the number of bytes to send
  *****************************************************************************/
-void SPI1_setupSlaveInt(char* receiveBuffer, int receiveBufferSize, char* transmitBuffer, int transmitBufferSize)
+void SPI1_setupSlaveInt(uint8_t* receiveBuffer, int receiveBufferSize, uint8_t* transmitBuffer, int transmitBufferSize)
 {
   SPI1_setupRXInt(receiveBuffer, receiveBufferSize);
   SPI1_setupTXInt(transmitBuffer, transmitBufferSize);
