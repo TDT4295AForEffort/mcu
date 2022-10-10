@@ -7,10 +7,10 @@
 #define TURN_SPEED 0.5
 #define MOVE_SPEED 0.8
 
-#define MAP_SIZE_X 8
-#define MAP_SIZE_Y 8
-#define TEXTURE_SIZE_X 8
-#define TEXTURE_SIZE_Y 8
+#define MAP_SIZE_MAX_X 8
+#define MAP_SIZE_MAX_Y 8
+#define TEXTURE_SIZE_MAX_X 8
+#define TEXTURE_SIZE_MAX_Y 8
 #define NUMBER_OF_TEXTURES 0
 
 typedef struct GameBlock{
@@ -36,23 +36,23 @@ typedef struct Player_Send{
 
 typedef struct Texture_Send{
   uint8_t texture_code;
-  uint8_t texture_x_size = TEXTURE_SIZE_X;
-  uint8_t texture_y_size = TEXTURE_SIZE_Y;
-  uint16_t texture_data[TEXTURE_SIZE_Y*TEXTURE_SIZE_X];
-}
+  uint8_t texture_x_size;
+  uint8_t texture_y_size;
+  uint16_t texture_data[TEXTURE_SIZE_MAX_Y*TEXTURE_SIZE_MAX_X];
+} Texture_Send;
 
 typedef struct MetaData_Send{
   uint8_t packet_mode;
   uint8_t package_size;
-  uint8_t map_x_size = MAP_SIZE_X;
-  uint8_t map_y_size = MAP_SIZE_Y;
+  uint8_t map_x_size;
+  uint8_t map_y_size;
   uint8_t number_of_textures;
 } MetaData_Send;
 
 typedef struct GameState_Send{
   MetaData_Send header;
   Player_Send player_data;
-  GameBlock map[MAP_SIZE_X*MAP_SIZE_Y];
+  GameBlock map[MAP_SIZE_MAX_X*MAP_SIZE_MAX_Y];
   Texture_Send Textures[NUMBER_OF_TEXTURES];
 } GameState_Send;
 
