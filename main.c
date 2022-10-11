@@ -31,6 +31,7 @@
 #include "em_cmu.h"
 #include "spi.h"
 #include "usart.h"
+#include "sdcard.h"
 
 char transmitBuffer[] = "hello my name is mister buffer\n";
 #define            BUFFERSIZE    64
@@ -120,9 +121,9 @@ int main(void)
   setupSWOForPrint();
 
 
+  sdcard_main();
 
-
-
+  /*
   while (1) {
 
     // Do not remove this call: Silicon Labs components process action routine
@@ -139,4 +140,6 @@ int main(void)
 
 
   }
+  */
+
 }
