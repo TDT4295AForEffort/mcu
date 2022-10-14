@@ -36,15 +36,17 @@
 #include "stdint.h"
 #include <stdlib.h>
 
-#define BUFFERSIZE sizeof(Player)//20 bytes
+#define BUFFERSIZE 8210 //Size of header+player+map
 
-uint8_t transmitBuffer/*[]*/[BUFFERSIZE];// = "hello my name is mister buffer, let the games begin!\n";
+uint8_t transmitBuffer[BUFFERSIZE];
 uint8_t receiveBuffer[BUFFERSIZE];
 Player *test_transmit_player;
 Player *test_recieve_player;
 
 TestStruct *transmit_test;
 TestStruct *receive_test;
+
+GameBlock map_test[GAME_MAP_SIZE][GAME_MAP_SIZE];
 
 void init(void) {
   /* Enabling clock to USART 1 and 2*/
@@ -53,7 +55,7 @@ void init(void) {
     CMU_ClockEnable(cmuClock_GPIO, true);
 
     test_transmit_player = malloc(BUFFERSIZE);
-    test_transmit_player->x_pos = 16.4;
+    test_transmit_player->x_pos = 4.0;
     test_transmit_player->y_pos = 4.3;
     test_transmit_player->vision_angle = 2.7;
     test_transmit_player->x_dir = 3.8;
@@ -61,28 +63,28 @@ void init(void) {
 
     transmit_test = malloc(BUFFERSIZE);
     transmit_test->one = 1;
-    transmit_test->two = 2;
-    transmit_test->three = 3;
-    transmit_test->four = 4;
-    transmit_test->five = 5;
+    transmit_test->two = 1;
+    transmit_test->three = 1;
+    transmit_test->four = 1;
+    transmit_test->five = 1;
 
+    init_map(map_test); //Just init the map
+    populate_spi_transmit_buffer(0, (uint8_t) 8210/*Buffer size*/, test_transmit_player, map_test, transmitBuffer);
 
-    populate_spi_transmit_buffer(test_transmit_player, transmitBuffer);
     //populate_spi_transmit_buffer_test(transmit_test, transmitBuffer);
-
+    //populate_spi_transmit_buffer_test_player(test_transmit_player, transmitBuffer);
 
     //master setup
     /* Setup USART */
-    SPI_setup(USART1_NUM, GPIO_POS1, true);
+    //SPI_setup(USART1_NUM, GPIO_POS1, true);
 
     /* Setting up RX interrupt for master */
-    SPI1_setupRXInt(NO_RX, NO_RX);
+    //SPI1_setupRXInt(NO_RX, NO_RX);
 
     //slave setup
-
-    /*SPI_setup(USART1_NUM, GPIO_POS1, false);
+    SPI_setup(USART1_NUM, GPIO_POS1, false);
     SPI1_setupSlaveInt(receiveBuffer, BUFFERSIZE, NO_TX, NO_TX);
-    memset(receiveBuffer, '\0', BUFFERSIZE);*/
+    memset(receiveBuffer, '\0', BUFFERSIZE);
 }
 
 void setupSWOForPrint(void)
@@ -156,10 +158,11 @@ int main(void)
     sl_system_process_action();
 
     //For master to send
-    USART1_sendBuffer(transmitBuffer, BUFFERSIZE);
+    //USART1_sendBuffer(transmitBuffer, BUFFERSIZE);
 
     //Bind the received buffer as a struct
     //test_recieve_player = (Player*)receiveBuffer;
+    //test_recieve_player = (Player*)transmitBuffer;
     //receive_test = (TestStruct*) transmitBuffer;
 
     //For slave to write what it receives into SWO
@@ -188,6 +191,9 @@ int main(void)
         ITM_SendChar(transmitBuffer[i] +'0');
     }
     ITM_SendChar('\n');
+
+
+
 
     //ITM_SendChar('\n');
     //memset(receiveBuffer, '\0', BUFFERSIZE);
