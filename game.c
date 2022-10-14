@@ -23,7 +23,7 @@ void move_backward(Player* player, float dt) {
   player->y_pos -= MOVE_SPEED * player->y_dir * dt;
 }
 
-void init_map(GameBlock** map) {
+void init_map(GameBlock map[GAME_MAP_SIZE][GAME_MAP_SIZE]) {
   for (int i = 0; i < GAME_MAP_SIZE; i++) {
       //fill borders with wall
       map[0][i].state = 1;

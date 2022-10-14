@@ -30,6 +30,6 @@ void move_forward(Player*, float);
 void move_backward(Player*, float);
 
 //map is a 2D array of gameblocks. initialized like this: GameBlock map[GAME_MAP_SIZE][GAME_MAP_SIZE]
-void init_map(GameBlock**);
+void init_map(GameBlock[GAME_MAP_SIZE][GAME_MAP_SIZE]);
 
 #endif
