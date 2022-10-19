@@ -2,6 +2,7 @@
 #define __GAME_H
 
 #include "stdint.h"
+#include <stdbool.h>
 #define GAME_MAP_SIZE 64
 //TODO: find nice values for these
 #define TURN_SPEED 0.5
@@ -56,13 +57,15 @@ typedef struct GameState_Send{
   Texture_Send Textures[NUMBER_OF_TEXTURES];
 } GameState_Send;
 
-void turn_right(Player*, float);
+void turn_right(Player*, float amount, float dt);
 
-void turn_left(Player*, float);
+void turn_left(Player*, float amount, float dt);
 
-void move_forward(Player*, float);
+void move_forward(Player*, GameBlock**, float amount, float dt);
 
-void move_backward(Player*, float);
+void move_backward(Player*, GameBlock**, float amount, float dt);
+
+bool check_collision(float x_pos, float y_pos, GameBlock**);
 
 //map is a 2D array of gameblocks. initialized like this: GameBlock map[GAME_MAP_SIZE][GAME_MAP_SIZE]
 void init_map(GameBlock**);
