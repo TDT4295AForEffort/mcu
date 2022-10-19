@@ -41,7 +41,8 @@
 #include "ff.h"
 #include "microsd.h"
 #include "diskio.h"
-#include "bsp.h"
+#include "usart.h"
+//#include "bsp.h"
 
 /* Ram buffers
  * BUFFERSIZE should be between 512 and 1024, depending on available ram on efm32
@@ -114,7 +115,7 @@ int16_t filecounter;
   CMU_ClockSelectSet(cmuClock_HF, cmuSelect_HFXO);
 
   /* Initialize DVK board register access */
-  BSP_Init(BSP_INIT_DEFAULT);
+  //BSP_Init(BSP_INIT_DEFAULT);
 
   /* Setup SysTick Timer for 10 msec interrupts  */
   if (SysTick_Config(CMU_ClockFreqGet(cmuClock_CORE) / 100))
@@ -123,8 +124,11 @@ int16_t filecounter;
   }
 
   /* Enable SPI access to MicroSD card */
-  BSP_RegisterWrite(BC_SPI_CFG, 1);
-  BSP_PeripheralAccess(BSP_SPI, true);
+  //BSP_RegisterWrite(BC_SPI_CFG, 1);
+  //BSP_PeripheralAccess(BSP_SPI, true);
+  CMU_ClockEnable(cmuClock_USART2, true);
+  SPI_setup(USART2_NUM, GPIO_POS1, true);
+
 
   /*Step1*/
   /*Initialization file buffer write */
