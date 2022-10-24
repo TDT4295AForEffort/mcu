@@ -21,13 +21,13 @@ typedef struct Player{
   float y_dir;
 } Player;
 
-void turn_right(Player*, float);
+void turn_right(Player*, float, float);
 
-void turn_left(Player*, float);
+void turn_left(Player*, float, float);
 
-void move_forward(Player*, float);
+void move_forward(Player*, float, float);
 
-void move_backward(Player*, float);
+void move_backward(Player*, float, float);
 
 //map is a 2D array of gameblocks. initialized like this: GameBlock map[GAME_MAP_SIZE][GAME_MAP_SIZE]
 void init_map(GameBlock[GAME_MAP_SIZE][GAME_MAP_SIZE]);
