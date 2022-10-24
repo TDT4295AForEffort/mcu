@@ -31,13 +31,42 @@ sprite texture (16 x 16 pixels, 16 bits for each pixel)
 
 position and angle
 
+### Current structure of SPI state transfer to FPGA
+(One row = 1 byte)
+
+packet size
+packet size
+packet mode
+*Free byte for later use*
+
+player xpos
+player xpos
+player xpos
+player xpos
+player ypos
+player ypos
+player ypos
+player ypos
+player xdir
+player xdir
+player xdir
+player xdir
+player ydir
+player ydir
+player ydir
+player ydir
+
+(The following square is repeated for the size of the map, which is currently 64x64)
+map square state
+map square textureID
+
 ## todo
 
--- make function for converting regular floats to fixed point precision floats with 16 int bits and 16 bits for fractional part
+-- (X) make function for converting regular floats to fixed point precision floats with 16 int bits and 16 bits for fractional part
 
--- make spi controller (koke?)
+-- (X) make spi controller (koke?)
 
--- simple move and rotation functions for player
+-- (X) simple move and rotation functions for player
 
 -- IO code for buttons
 

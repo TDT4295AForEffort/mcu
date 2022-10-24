@@ -134,19 +134,19 @@ void SPI_setup(uint8_t spiNumber, uint8_t location, bool master)
               case 0: /* IO configuration (USART 0, Location #0) */
                       GPIO_PinModeSet(gpioPortE, 10, gpioModeMosi, 0); /* MOSI */
                       GPIO_PinModeSet(gpioPortE, 11, gpioModeMiso, 0); /* MISO */
-                      GPIO_PinModeSet(gpioPortE, 13, gpioModeCs,   0); /* CS */
+                      GPIO_PinModeSet(gpioPortE, 13, gpioModeCs,   1); /* CS */
                       GPIO_PinModeSet(gpioPortE, 12, gpioModeClk,  0); /* Clock */
                       break;
               case 1: /* IO configuration (USART 0, Location #1) */
                       GPIO_PinModeSet(gpioPortE, 7, gpioModeMosi, 0);  /* MOSI */
                       GPIO_PinModeSet(gpioPortE, 6, gpioModeMiso, 0);  /* MISO */
-                      GPIO_PinModeSet(gpioPortE, 4, gpioModeCs,   0);  /* CS */
+                      GPIO_PinModeSet(gpioPortE, 4, gpioModeCs,   1);  /* CS */
                       GPIO_PinModeSet(gpioPortE, 5, gpioModeClk,  0);  /* Clock */
                       break;
               case 2: /* IO configuration (USART 0, Location #2) */
                       GPIO_PinModeSet(gpioPortC, 11, gpioModeMosi, 0); /* MOSI */
                       GPIO_PinModeSet(gpioPortC, 10, gpioModeMiso, 0); /* MISO */
-                      GPIO_PinModeSet(gpioPortC,  8, gpioModeCs,   0); /* CS */
+                      GPIO_PinModeSet(gpioPortC,  8, gpioModeCs,   1); /* CS */
                       GPIO_PinModeSet(gpioPortC,  9, gpioModeClk,  0); /* Clock */
                       break;
             default: break;
@@ -157,13 +157,13 @@ void SPI_setup(uint8_t spiNumber, uint8_t location, bool master)
               case 0: /* IO configuration (USART 1, Location #0) */
                       GPIO_PinModeSet(gpioPortC, 0, gpioModeMosi, 0);  /* MOSI */
                       GPIO_PinModeSet(gpioPortC, 1, gpioModeMiso, 0);  /* MISO */
-                      GPIO_PinModeSet(gpioPortB, 8, gpioModeCs,   0);  /* CS */
+                      GPIO_PinModeSet(gpioPortB, 8, gpioModeCs,   1);  /* CS */
                       GPIO_PinModeSet(gpioPortB, 7, gpioModeClk,  0);  /* Clock */
                       break;
               case 1: /* IO configuration (USART 1, Location #1) */
                       GPIO_PinModeSet(gpioPortD, 0, gpioModeMosi, 0);  /* MOSI */
                       GPIO_PinModeSet(gpioPortD, 1, gpioModeMiso, 0);  /* MISO */
-                      GPIO_PinModeSet(gpioPortD, 3, gpioModeCs,   0);  /* CS */
+                      GPIO_PinModeSet(gpioPortD, 3, gpioModeCs,  1);  /* CS */
                       GPIO_PinModeSet(gpioPortD, 2, gpioModeClk,  0);  /* Clock */
                       break;
             default: break;
@@ -174,13 +174,13 @@ void SPI_setup(uint8_t spiNumber, uint8_t location, bool master)
               case 0: /* IO configuration (USART 2, Location #0) */
                       GPIO_PinModeSet(gpioPortC, 2, gpioModeMosi, 0);  /* MOSI */
                       GPIO_PinModeSet(gpioPortC, 3, gpioModeMiso, 0);  /* MISO */
-                      GPIO_PinModeSet(gpioPortC, 5, gpioModeCs,   0);  /* CS */
+                      GPIO_PinModeSet(gpioPortC, 5, gpioModeCs,   1);  /* CS */
                       GPIO_PinModeSet(gpioPortC, 4, gpioModeClk,  0);  /* Clock */
                       break;
               case 1: /* IO configuration (USART 2, Location #1) */
                       GPIO_PinModeSet(gpioPortB, 3, gpioModeMosi, 0);  /* MOSI */
                       GPIO_PinModeSet(gpioPortB, 4, gpioModeMiso, 0);  /* MISO */
-                      GPIO_PinModeSet(gpioPortB, 6, gpioModeCs,   0);  /* CS */
+                      GPIO_PinModeSet(gpioPortB, 6, gpioModeCs,   1);  /* CS */
                       GPIO_PinModeSet(gpioPortB, 5, gpioModeClk,  0);  /* Clock */
                       break;
             default: break;
