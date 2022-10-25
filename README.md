@@ -34,31 +34,31 @@ position and angle
 ### Current structure of SPI state transfer to FPGA
 (One row = 1 byte)
 
-packet size
-packet size
-packet mode
-*Free byte for later use*
+packet size  
+packet size  
+packet mode  
+*Free byte for later use*  
 
-player xpos
-player xpos
-player xpos
-player xpos
-player ypos
-player ypos
-player ypos
-player ypos
-player xdir
-player xdir
-player xdir
-player xdir
-player ydir
-player ydir
-player ydir
-player ydir
+player xpos  
+player xpos  
+player xpos  
+player xpos  
+player ypos  
+player ypos  
+player ypos  
+player ypos  
+player xdir  
+player xdir  
+player xdir  
+player xdir  
+player ydir  
+player ydir  
+player ydir  
+player ydir  
 
-(The following square is repeated for the size of the map, which is currently 64x64)
-map square state
-map square textureID
+(The following square is repeated for the size of the map, which is currently 64x64)  
+map square state  
+map square textureID  
 
 ## todo
 
