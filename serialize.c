@@ -6,7 +6,7 @@ uint32_t float_to_fixed(float input)
     return (uint32_t)(round(input * (1 << 14))); //18 integral bits, 14 fractional bits
 }
 
-void populate_spi_transmit_buffer(uint8_t packet_mode, uint16_t packet_size, Player* player, GameBlock current_map[GAME_MAP_SIZE][GAME_MAP_SIZE], uint8_t* transmit_buffer){
+void populate_spi_transmit_buffer(uint8_t packet_mode, uint16_t packet_size, Player player, GameBlock current_map[GAME_MAP_SIZE][GAME_MAP_SIZE], uint8_t* transmit_buffer){
   //Setting up header with metadata
   transmit_buffer[0] = (packet_size >> 8) & 0xFF;
   transmit_buffer[1] = packet_size & 0xFF;
@@ -15,10 +15,10 @@ void populate_spi_transmit_buffer(uint8_t packet_mode, uint16_t packet_size, Pla
 
   //Populating buffer with player struct
   //Got rid of vision_angle, as it is not needed in the fpga
-  uint32_t x_pos = float_to_fixed(player->x_pos);
-  uint32_t y_pos = float_to_fixed(player->y_pos);
-  uint32_t x_dir = float_to_fixed(player->x_dir);
-  uint32_t y_dir = float_to_fixed(player->y_dir);
+  uint32_t x_pos = float_to_fixed(player.x_pos);
+  uint32_t y_pos = float_to_fixed(player.y_pos);
+  uint32_t x_dir = float_to_fixed(player.x_dir);
+  uint32_t y_dir = float_to_fixed(player.y_dir);
 
   transmit_buffer[4] = (x_pos >> 24) & 0xFF;
   transmit_buffer[5] = (x_pos >> 16) & 0xFF;

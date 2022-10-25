@@ -42,10 +42,10 @@
 
 uint8_t transmitBuffer[BUFFERSIZE];
 uint8_t receiveBuffer[BUFFERSIZE];
-Player *test_transmit_player;
+Player player;
 //TestStruct *transmit_test;
 
-GameBlock map_test[GAME_MAP_SIZE][GAME_MAP_SIZE];
+GameBlock game_map[GAME_MAP_SIZE][GAME_MAP_SIZE];
 
 void init(void) {
   /* Enabling clock to USART 1 and 2*/
@@ -54,12 +54,13 @@ void init(void) {
     CMU_ClockEnable(cmuClock_GPIO, true);
 
     //Init player
-    test_transmit_player = malloc(20);
-    test_transmit_player->x_pos = 4.0;
-    test_transmit_player->y_pos = 4.3;
-    test_transmit_player->vision_angle = 2.7;
-    test_transmit_player->x_dir = 3.8;
-    test_transmit_player->y_dir = 6.8;
+    init_player(2.0, 2.0);
+    //player = malloc(20);
+    /*player.x_pos = 4.0;
+    player.y_pos = 4.3;
+    player.vision_angle = 2.7;
+    player.x_dir = 3.8;
+    player.y_dir = 6.8;*/
 
     /*transmit_test = malloc(BUFFERSIZE);
     transmit_test->one = 1;
@@ -68,11 +69,11 @@ void init(void) {
     transmit_test->four = 1;
     transmit_test->five = 1;*/
 
-    init_map(map_test); //Init the map
-    populate_spi_transmit_buffer(0, (uint8_t) 8210/*Buffer size*/, test_transmit_player, map_test, transmitBuffer);
+    init_map(); //Init the map
+    populate_spi_transmit_buffer(0, (uint8_t) 8210/*Buffer size*/, player, game_map, transmitBuffer);
 
     //populate_spi_transmit_buffer_test(transmit_test, transmitBuffer);
-    //populate_spi_transmit_buffer_test_player(test_transmit_player, transmitBuffer);
+    //populate_spi_transmit_buffer_test_player(player, transmitBuffer);
 
     //master setup
     /* Setup USART */
@@ -158,13 +159,11 @@ int main(void)
     sl_system_process_action();
 
     //For every loop where a button is pressed, update the player position
-    turn_right(test_transmit_player, 1, DELTA_TIME); //We are still waiting for joystick input, so we put 1 in as placeholder value for now
-    turn_left(test_transmit_player, 0, DELTA_TIME);
-    move_forward(test_transmit_player, 1, DELTA_TIME);
-    move_backward(test_transmit_player, 0, DELTA_TIME);
+    turn_player(1, DELTA_TIME); //Examples for now
+    move_player(1, 1, DELTA_TIME);
 
     //Fill transmit buffer with updated values of the game state
-    populate_spi_transmit_buffer(0, (uint16_t) 8210, test_transmit_player, map_test, transmitBuffer);
+    populate_spi_transmit_buffer(0, (uint16_t) 8210, player, game_map, transmitBuffer);
 
 
     //For master to send
