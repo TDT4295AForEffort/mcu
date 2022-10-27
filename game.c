@@ -23,6 +23,7 @@ void move_player(float move_x, float move_y, float dt) {
   }
 }
 
+//Make sure you are not so close to a wall so that you clip through it. (no closer than 0.125)
 bool check_collision(float x_pos, float y_pos) {
   int x_block_pos = x_pos;
   int y_block_pos = y_pos;
@@ -30,7 +31,22 @@ bool check_collision(float x_pos, float y_pos) {
     return true;
   }
   uint8_t block_state = game_map[x_block_pos][y_block_pos].state;
-  if (block_state != 0) return true;
+  float fract_x = x_pos-x_block_pos;
+  float fract_y = y_pos-y_block_pos;
+
+  //if (block_state != 0)return true;
+  if (fract_x < 0.125 && game_map[x_block_pos-1][y_block_pos].state != 0){
+      return true;
+  }
+  if (fract_x > 0.875 && game_map[x_block_pos+1][y_block_pos].state != 0){
+      return true;
+  }
+  if (fract_y > 0.125 && game_map[x_block_pos][y_block_pos-1].state != 0){
+      return true;
+  }
+  if (fract_x > 0.875 && game_map[x_block_pos][y_block_pos+1].state != 0){
+      return true;
+  }
   return false;
 }
 
