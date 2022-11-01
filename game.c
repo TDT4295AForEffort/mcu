@@ -78,7 +78,7 @@ void place_block() {
 }
 
 void init_player() {
-  //player starts in middle of the map looking at a 45 degree angle up from x-axis.
+  //player starts in middle of the map, and looks along x-axis
   player.x_dir = 1.0;
   player.y_dir = 0.0;
   player.x_pos = GAME_MAP_SIZE / 2 - 0.5;
