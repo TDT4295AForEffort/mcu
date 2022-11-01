@@ -5,7 +5,7 @@
 #include <math.h>
 
 void turn_player(float amount, float dt) {
-  float rot_angle = -amount * TURN_SPEED * dt;
+  float rot_angle = amount * TURN_SPEED * dt;
   player.vision_angle += rot_angle;
   player.x_dir = cosf(player.vision_angle);
   player.y_dir = sinf(player.vision_angle);
@@ -30,11 +30,13 @@ bool check_collision(float x_pos, float y_pos) {
   if (x_block_pos < 0 || y_block_pos < 0 || x_block_pos > GAME_MAP_SIZE || y_block_pos > GAME_MAP_SIZE) {
     return true;
   }
-  uint8_t block_state = game_map[x_block_pos][y_block_pos].state;
   float fract_x = x_pos-x_block_pos;
   float fract_y = y_pos-y_block_pos;
 
-  //if (block_state != 0)return true;
+  if (game_map[x_block_pos][y_block_pos].state) {
+      return true;
+  }
+  //check collisions with padding
   if (fract_x < 0.125 && game_map[x_block_pos-1][y_block_pos].state != 0){
       return true;
   }
@@ -48,6 +50,31 @@ bool check_collision(float x_pos, float y_pos) {
       return true;
   }
   return false;
+}
+
+void modify_block(uint8_t state) {
+  int x_block_pos = player.x_pos;
+  int y_block_pos = player.y_pos;
+  if (fabs(player.x_dir) > fabs(player.y_dir)) {
+      x_block_pos += (player.x_dir > 0) - (player.x_dir < 0);
+      if (x_block_pos > 0 && x_block_pos < GAME_MAP_SIZE) {
+          game_map[x_block_pos][y_block_pos].state = state;
+      }
+  }
+  else {
+      y_block_pos += (player.y_dir > 0) - (player.y_dir < 0);
+      if (y_block_pos > 0 && y_block_pos < GAME_MAP_SIZE) {
+         game_map[x_block_pos][y_block_pos].state = state;
+      }
+  }
+}
+
+void destroy_block() {
+  modify_block(0);
+}
+
+void place_block() {
+  modify_block(1);
 }
 
 void init_player(float x_pos, float y_pos) {
