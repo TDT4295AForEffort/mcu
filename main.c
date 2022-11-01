@@ -31,10 +31,21 @@
 #include "em_cmu.h"
 #include "spi.h"
 #include "usart.h"
+#include "game.h"
+#include "serialize.h"
+#include "stdint.h"
+#include <stdlib.h>
+//#include "time.h"
 
-char transmitBuffer[] = "hello my name is mister buffer\n";
-#define            BUFFERSIZE    64
-char receiveBuffer[BUFFERSIZE];
+#define BUFFERSIZE 8210 //Size of header+player+map
+#define DELTA_TIME 0.001 //To be used to calculate player position and direction
+
+uint8_t transmitBuffer[BUFFERSIZE];
+uint8_t receiveBuffer[BUFFERSIZE];
+Player player;
+//TestStruct *transmit_test;
+
+GameBlock game_map[GAME_MAP_SIZE][GAME_MAP_SIZE];
 
 void init(void) {
   /* Enabling clock to USART 1 and 2*/
@@ -42,19 +53,39 @@ void init(void) {
     CMU_ClockEnable(cmuClock_USART2, true);
     CMU_ClockEnable(cmuClock_GPIO, true);
 
+    //Init player
+    init_player(2.0, 2.0);
+    //player = malloc(20);
+    /*player.x_pos = 4.0;
+    player.y_pos = 4.3;
+    player.vision_angle = 2.7;
+    player.x_dir = 3.8;
+    player.y_dir = 6.8;*/
+
+    /*transmit_test = malloc(BUFFERSIZE);
+    transmit_test->one = 1;
+    transmit_test->two = 1;
+    transmit_test->three = 1;
+    transmit_test->four = 1;
+    transmit_test->five = 1;*/
+
+    init_map(); //Init the map
+    populate_spi_transmit_buffer(0, (uint8_t) 8210/*Buffer size*/, player, game_map, transmitBuffer);
+
+    //populate_spi_transmit_buffer_test(transmit_test, transmitBuffer);
+    //populate_spi_transmit_buffer_test_player(player, transmitBuffer);
 
     //master setup
     /* Setup USART */
-    //SPI_setup(USART1_NUM, GPIO_POS1, true);
+    SPI_setup(USART1_NUM, GPIO_POS1, true);
 
     /* Setting up RX interrupt for master */
-    //SPI1_setupRXInt(NO_RX, NO_RX);
+    SPI1_setupRXInt(NO_RX, NO_RX);
 
     //slave setup
-
-    SPI_setup(USART1_NUM, GPIO_POS1, false);
+    /*SPI_setup(USART1_NUM, GPIO_POS1, false);
     SPI1_setupSlaveInt(receiveBuffer, BUFFERSIZE, NO_TX, NO_TX);
-    memset(receiveBuffer, '\0', BUFFERSIZE);
+    memset(receiveBuffer, '\0', BUFFERSIZE);*/
 }
 
 void setupSWOForPrint(void)
@@ -65,7 +96,7 @@ void setupSWOForPrint(void)
   /* Enable Serial wire output pin */
   GPIO->ROUTE |= GPIO_ROUTE_SWOPEN;
 
-#if defined(_EFM32_GIANT_FAMILY) || defined(_EFM32_LEOPARD_FAMILY) || defined(_EFM32_WONDER_FAMILY)
+  #if defined(_EFM32_GIANT_FAMILY) || defined(_EFM32_LEOPARD_FAMILY) || defined(_EFM32_WONDER_FAMILY)
   /* Set location 0 */
   GPIO->ROUTE = (GPIO->ROUTE & ~(_GPIO_ROUTE_SWLOCATION_MASK)) | GPIO_ROUTE_SWLOCATION_LOC0;
 
@@ -100,7 +131,6 @@ void setupSWOForPrint(void)
   ITM->TER  = 0x1;
 }
 
-
 int main(void)
 {
   // Initialize Silicon Labs device, system, service(s) and protocol stack(s).
@@ -122,21 +152,36 @@ int main(void)
 
 
 
-
   while (1) {
 
     // Do not remove this call: Silicon Labs components process action routine
     // must be called from the super loop.
     sl_system_process_action();
-    //USART1_sendBuffer(transmitBuffer, BUFFERSIZE);
+
+    //For every loop where a button is pressed, update the player position
+    turn_player(1, DELTA_TIME); //Examples for now
+    move_player(1, 1, DELTA_TIME);
+
+    //Fill transmit buffer with updated values of the game state
+    populate_spi_transmit_buffer(0, (uint16_t) 8210, player, game_map, transmitBuffer);
+
+
+    //For master to send
+    USART1_sendBuffer(transmitBuffer, BUFFERSIZE);
+
+
+    //For slave to write what it receives into SWO
     for (unsigned int i = 0; i < BUFFERSIZE; i++) {
-        ITM_SendChar(receiveBuffer[i]);
-
+        ITM_SendChar(receiveBuffer[i]+'0');
     }
-    //ITM_SendChar('\n');
-    //memset(receiveBuffer, '\0', BUFFERSIZE);
-    // Application process.
+    ITM_SendChar('\n');
+    ITM_SendChar('b');
+    ITM_SendChar('\n');
 
 
+    for (unsigned int i = 0; i < BUFFERSIZE; i++) {
+        ITM_SendChar(transmitBuffer[i] +'0');
+    }
+    ITM_SendChar('\n');
   }
 }

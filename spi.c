@@ -48,13 +48,13 @@
 
 
 /* Buffer pointers and indexes */
-char* slaveTxBuffer;
+uint8_t* slaveTxBuffer;
 int slaveTxBufferSize;
 volatile int slaveTxBufferIndex;
-char* slaveRxBuffer;
+uint8_t* slaveRxBuffer;
 int slaveRxBufferSize;
 volatile int slaveRxBufferIndex;
-char* masterRxBuffer;
+uint8_t* masterRxBuffer;
 int masterRxBufferSize;
 volatile int masterRxBufferIndex;
 
@@ -134,19 +134,19 @@ void SPI_setup(uint8_t spiNumber, uint8_t location, bool master)
               case 0: /* IO configuration (USART 0, Location #0) */
                       GPIO_PinModeSet(gpioPortE, 10, gpioModeMosi, 0); /* MOSI */
                       GPIO_PinModeSet(gpioPortE, 11, gpioModeMiso, 0); /* MISO */
-                      GPIO_PinModeSet(gpioPortE, 13, gpioModeCs,   0); /* CS */
+                      GPIO_PinModeSet(gpioPortE, 13, gpioModeCs,   1); /* CS */
                       GPIO_PinModeSet(gpioPortE, 12, gpioModeClk,  0); /* Clock */
                       break;
               case 1: /* IO configuration (USART 0, Location #1) */
                       GPIO_PinModeSet(gpioPortE, 7, gpioModeMosi, 0);  /* MOSI */
                       GPIO_PinModeSet(gpioPortE, 6, gpioModeMiso, 0);  /* MISO */
-                      GPIO_PinModeSet(gpioPortE, 4, gpioModeCs,   0);  /* CS */
+                      GPIO_PinModeSet(gpioPortE, 4, gpioModeCs,   1);  /* CS */
                       GPIO_PinModeSet(gpioPortE, 5, gpioModeClk,  0);  /* Clock */
                       break;
               case 2: /* IO configuration (USART 0, Location #2) */
                       GPIO_PinModeSet(gpioPortC, 11, gpioModeMosi, 0); /* MOSI */
                       GPIO_PinModeSet(gpioPortC, 10, gpioModeMiso, 0); /* MISO */
-                      GPIO_PinModeSet(gpioPortC,  8, gpioModeCs,   0); /* CS */
+                      GPIO_PinModeSet(gpioPortC,  8, gpioModeCs,   1); /* CS */
                       GPIO_PinModeSet(gpioPortC,  9, gpioModeClk,  0); /* Clock */
                       break;
             default: break;
@@ -157,13 +157,13 @@ void SPI_setup(uint8_t spiNumber, uint8_t location, bool master)
               case 0: /* IO configuration (USART 1, Location #0) */
                       GPIO_PinModeSet(gpioPortC, 0, gpioModeMosi, 0);  /* MOSI */
                       GPIO_PinModeSet(gpioPortC, 1, gpioModeMiso, 0);  /* MISO */
-                      GPIO_PinModeSet(gpioPortB, 8, gpioModeCs,   0);  /* CS */
+                      GPIO_PinModeSet(gpioPortB, 8, gpioModeCs,   1);  /* CS */
                       GPIO_PinModeSet(gpioPortB, 7, gpioModeClk,  0);  /* Clock */
                       break;
               case 1: /* IO configuration (USART 1, Location #1) */
                       GPIO_PinModeSet(gpioPortD, 0, gpioModeMosi, 0);  /* MOSI */
                       GPIO_PinModeSet(gpioPortD, 1, gpioModeMiso, 0);  /* MISO */
-                      GPIO_PinModeSet(gpioPortD, 3, gpioModeCs,   0);  /* CS */
+                      GPIO_PinModeSet(gpioPortD, 3, gpioModeCs,  1);  /* CS */
                       GPIO_PinModeSet(gpioPortD, 2, gpioModeClk,  0);  /* Clock */
                       break;
             default: break;
@@ -174,13 +174,13 @@ void SPI_setup(uint8_t spiNumber, uint8_t location, bool master)
               case 0: /* IO configuration (USART 2, Location #0) */
                       GPIO_PinModeSet(gpioPortC, 2, gpioModeMosi, 0);  /* MOSI */
                       GPIO_PinModeSet(gpioPortC, 3, gpioModeMiso, 0);  /* MISO */
-                      GPIO_PinModeSet(gpioPortC, 5, gpioModeCs,   0);  /* CS */
+                      GPIO_PinModeSet(gpioPortC, 5, gpioModeCs,   1);  /* CS */
                       GPIO_PinModeSet(gpioPortC, 4, gpioModeClk,  0);  /* Clock */
                       break;
               case 1: /* IO configuration (USART 2, Location #1) */
                       GPIO_PinModeSet(gpioPortB, 3, gpioModeMosi, 0);  /* MOSI */
                       GPIO_PinModeSet(gpioPortB, 4, gpioModeMiso, 0);  /* MISO */
-                      GPIO_PinModeSet(gpioPortB, 6, gpioModeCs,   0);  /* CS */
+                      GPIO_PinModeSet(gpioPortB, 6, gpioModeCs,   1);  /* CS */
                       GPIO_PinModeSet(gpioPortB, 5, gpioModeClk,  0);  /* Clock */
                       break;
             default: break;
@@ -197,7 +197,7 @@ void SPI_setup(uint8_t spiNumber, uint8_t location, bool master)
  * @param receiveBuffer points to where to place recieved data
  * @param receiveBufferSize indicates the number of bytes to receive
  *****************************************************************************/
-void SPI1_setupRXInt(char* receiveBuffer, int receiveBufferSize)
+void SPI1_setupRXInt(uint8_t* receiveBuffer, int receiveBufferSize)
 {
   USART_TypeDef *spi = USART1;
 
@@ -222,7 +222,7 @@ void SPI1_setupRXInt(char* receiveBuffer, int receiveBufferSize)
  * @param transmitBuffer points to the data to send
  * @param transmitBufferSize indicates the number of bytes to send
  *****************************************************************************/
-void SPI1_setupTXInt(char* transmitBuffer, int transmitBufferSize)
+void SPI1_setupTXInt(uint8_t* transmitBuffer, int transmitBufferSize)
 {
   USART_TypeDef *spi = USART1;
 
@@ -247,7 +247,7 @@ void SPI1_setupTXInt(char* transmitBuffer, int transmitBufferSize)
  * @param receiveBuffer points to where received data is to be stored
  * @param bytesToReceive indicates the number of bytes to receive
  *****************************************************************************/
-void SPI2_setupRXInt(char* receiveBuffer, int bytesToReceive)
+void SPI2_setupRXInt(uint8_t* receiveBuffer, int bytesToReceive)
 {
   USART_TypeDef *spi = USART2;
 
@@ -274,7 +274,7 @@ void SPI2_setupRXInt(char* receiveBuffer, int bytesToReceive)
  * @param transmitBuffer points to the data to send
  * @param transmitBufferSize indicates the number of bytes to send
  *****************************************************************************/
-void SPI1_setupSlaveInt(char* receiveBuffer, int receiveBufferSize, char* transmitBuffer, int transmitBufferSize)
+void SPI1_setupSlaveInt(uint8_t* receiveBuffer, int receiveBufferSize, uint8_t* transmitBuffer, int transmitBufferSize)
 {
   SPI1_setupRXInt(receiveBuffer, receiveBufferSize);
   SPI1_setupTXInt(transmitBuffer, transmitBufferSize);

@@ -37,9 +37,9 @@
 #include "em_device.h"
 
 void SPI_setup(uint8_t spiNumber, uint8_t location, bool master);
-void SPI2_setupRXInt(char* receiveBuffer, int bytesToReceive);
-void SPI1_setupRXInt(char* receiveBuffer, int bytesToReceive);
-void SPI1_setupTXInt(char* transmitBuffer, int transmitBufferSize);
-void SPI1_setupSlaveInt(char* receiveBuffer, int receiveBufferSize, char* transmitBuffer, int transmitBufferSize);
+void SPI2_setupRXInt(uint8_t* receiveBuffer, int bytesToReceive);
+void SPI1_setupRXInt(uint8_t* receiveBuffer, int bytesToReceive);
+void SPI1_setupTXInt(uint8_t* transmitBuffer, int transmitBufferSize);
+void SPI1_setupSlaveInt(uint8_t* receiveBuffer, int receiveBufferSize, uint8_t* transmitBuffer, int transmitBufferSize);
 
 #endif
