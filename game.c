@@ -79,11 +79,11 @@ void place_block() {
 
 void init_player() {
   //player starts in middle of the map looking at a 45 degree angle up from x-axis.
-  player.x_dir = 0.7071067811865475244;
-  player.y_dir = 0.7071067811865475244;
+  player.x_dir = 1.0;
+  player.y_dir = 0.0;
   player.x_pos = GAME_MAP_SIZE / 2 - 0.5;
   player.y_pos = GAME_MAP_SIZE / 2 - 0.5;
-  player.vision_angle = 0.78539816339744830962;
+  player.vision_angle = 0.0;
 }
 
 void init_map() {

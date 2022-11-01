@@ -26,9 +26,14 @@
 #endif // SL_CATALOG_KERNEL_PRESENT
 
 #include <string.h>
+#include <stdio.h>
 #include "em_device.h"
 #include "em_chip.h"
 #include "em_cmu.h"
+#include "em_emu.h"
+#include "em_gpio.h"
+#include "em_adc.h"
+#include "adc.h"
 #include "spi.h"
 #include "usart.h"
 #include "game.h"
@@ -47,6 +52,8 @@ Player player;
 
 GameBlock game_map[GAME_MAP_SIZE][GAME_MAP_SIZE];
 
+volatile uint32_t sample;
+
 void init(void) {
   /* Enabling clock to USART 1 and 2*/
     CMU_ClockEnable(cmuClock_USART1, true);
@@ -55,25 +62,10 @@ void init(void) {
 
     //Init player
     init_player();
-    //player = malloc(20);
-    /*player.x_pos = 4.0;
-    player.y_pos = 4.3;
-    player.vision_angle = 2.7;
-    player.x_dir = 3.8;
-    player.y_dir = 6.8;*/
-
-    /*transmit_test = malloc(BUFFERSIZE);
-    transmit_test->one = 1;
-    transmit_test->two = 1;
-    transmit_test->three = 1;
-    transmit_test->four = 1;
-    transmit_test->five = 1;*/
-
     init_map(); //Init the map
     populate_spi_transmit_buffer(0, (uint8_t) 8210/*Buffer size*/, player, game_map, transmitBuffer);
 
-    //populate_spi_transmit_buffer_test(transmit_test, transmitBuffer);
-    //populate_spi_transmit_buffer_test_player(player, transmitBuffer);
+    initADC();
 
     //master setup
     /* Setup USART */
@@ -131,6 +123,33 @@ void setupSWOForPrint(void)
   ITM->TER  = 0x1;
 }
 
+void print_stuff() {
+    ITM_SendChar('\n');
+    int player_x = player.x_pos;
+    int player_y = player.y_pos;
+    int cursor_x = player_x + (int)(2.5 * player.x_dir);
+    int cursor_y = player_y + (int)(2.5 * player.y_dir);
+    for (int i = 0; i < GAME_MAP_SIZE; i++) {
+        for (int j = 0; j < GAME_MAP_SIZE; j++) {
+            if (game_map[i][j].state != 0) {
+                ITM_SendChar('#');
+            }
+            else if (i == player_x && j == player_y) {
+                ITM_SendChar('P');
+            }
+            else if (i == cursor_x && j == cursor_y) {
+                ITM_SendChar('+');
+            }
+            else {
+                ITM_SendChar('-');
+            }
+            ITM_SendChar(' ');
+        }
+        ITM_SendChar('\n');
+    }
+    ITM_SendChar('\n');
+}
+
 int main(void)
 {
   // Initialize Silicon Labs device, system, service(s) and protocol stack(s).
@@ -150,14 +169,47 @@ int main(void)
   setupSWOForPrint();
 
 
-
+  int counter = 0;
 
   while (1) {
+    counter++;
+    /*
+    // Sample joystick in X-direction
+    sample = sampleJoystick(adcSingleInputCh2);
+    char buf[150];
+    snprintf(buf, sizeof buf, "%ld", (uint32_t) sample);
+    for (unsigned int i = 0; i < sizeof(uint32_t); i++) {
+      ITM_SendChar(buf[i]);
+    }
+
+    ITM_SendChar(' ');
+
+    // Sample joystick in Y-direction
+    sample = sampleJoystick(adcSingleInputCh3);
+    char buf2[150];
+    snprintf(buf2, sizeof buf2, "%ld", (uint32_t) sample);
+    for (unsigned int i = 0; i < sizeof(uint32_t); i++) {
+      ITM_SendChar(buf2[i]);
+    }
+
+    ITM_SendChar('\n');
+    */
 
     // Do not remove this call: Silicon Labs components process action routine
     // must be called from the super loop.
     sl_system_process_action();
 
+    float dt = 0.1;
+
+    move_player(0.1, 0.0, dt);
+    turn_player(0.0, dt);
+
+    if (counter > 100) {
+        print_stuff();
+        counter = 0;
+    }
+
+    /*
     //For every loop where a button is pressed, update the player position
     turn_player(1, DELTA_TIME); //Examples for now
     move_player(1, 1, DELTA_TIME);
@@ -183,5 +235,6 @@ int main(void)
         ITM_SendChar(transmitBuffer[i] +'0');
     }
     ITM_SendChar('\n');
+    */
   }
 }
