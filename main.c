@@ -26,9 +26,14 @@
 #endif // SL_CATALOG_KERNEL_PRESENT
 
 #include <string.h>
+#include <stdio.h>
 #include "em_device.h"
 #include "em_chip.h"
 #include "em_cmu.h"
+#include "em_emu.h"
+#include "em_gpio.h"
+#include "em_adc.h"
+#include "adc.h"
 #include "spi.h"
 #include "usart.h"
 
@@ -36,12 +41,15 @@ char transmitBuffer[] = "hello my name is mister buffer\n";
 #define            BUFFERSIZE    64
 char receiveBuffer[BUFFERSIZE];
 
+volatile uint32_t sample;
+
 void init(void) {
   /* Enabling clock to USART 1 and 2*/
     CMU_ClockEnable(cmuClock_USART1, true);
     CMU_ClockEnable(cmuClock_USART2, true);
     CMU_ClockEnable(cmuClock_GPIO, true);
 
+    initADC();
 
     //master setup
     /* Setup USART */
@@ -100,7 +108,6 @@ void setupSWOForPrint(void)
   ITM->TER  = 0x1;
 }
 
-
 int main(void)
 {
   // Initialize Silicon Labs device, system, service(s) and protocol stack(s).
@@ -124,6 +131,25 @@ int main(void)
 
 
   while (1) {
+    // Sample joystick in X-direction
+    sample = sampleJoystick(adcSingleInputCh2);
+    char buf[150];
+    snprintf(buf, sizeof buf, "%ld", (uint32_t) sample);
+    for (unsigned int i = 0; i < sizeof(uint32_t); i++) {
+      ITM_SendChar(buf[i]);
+    }
+
+    ITM_SendChar(' ');
+
+    // Sample joystick in Y-direction
+    sample = sampleJoystick(adcSingleInputCh3);
+    char buf2[150];
+    snprintf(buf2, sizeof buf2, "%ld", (uint32_t) sample);
+    for (unsigned int i = 0; i < sizeof(uint32_t); i++) {
+      ITM_SendChar(buf2[i]);
+    }
+
+    ITM_SendChar('\n');
 
     // Do not remove this call: Silicon Labs components process action routine
     // must be called from the super loop.
