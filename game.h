@@ -28,7 +28,8 @@ typedef struct Player{
   float y_dir;
 } Player;
 
-/*// Forslag til send-data
+/*
+// Forslag til send-data
 typedef struct Player_Send{
   uint32_t pos[2];
   uint32_t direction[2]; // Normalized
