@@ -54,7 +54,7 @@ void init(void) {
     CMU_ClockEnable(cmuClock_GPIO, true);
 
     //Init player
-    init_player(2.0, 2.0);
+    init_player();
     //player = malloc(20);
     /*player.x_pos = 4.0;
     player.y_pos = 4.3;

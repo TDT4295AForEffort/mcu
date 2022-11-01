@@ -77,12 +77,13 @@ void place_block() {
   modify_block(1);
 }
 
-void init_player(float x_pos, float y_pos) {
-  player.x_dir = 1.0;
-  player.y_dir = 0.0;
-  player.x_pos = x_pos;
-  player.y_pos = y_pos;
-  player.vision_angle = 0.0;
+void init_player() {
+  //player starts in middle of the map looking at a 45 degree angle up from x-axis.
+  player.x_dir = 0.7071067811865475244;
+  player.y_dir = 0.7071067811865475244;
+  player.x_pos = GAME_MAP_SIZE / 2 - 0.5;
+  player.y_pos = GAME_MAP_SIZE / 2 - 0.5;
+  player.vision_angle = 0.78539816339744830962;
 }
 
 void init_map() {
@@ -93,5 +94,10 @@ void init_map() {
     game_map[i][0].state = 1;
     game_map[i][GAME_MAP_SIZE-1].state = 1;
   }
-  //TODO: fill some random blocks?
+  //fill in blocks in checker pattern
+  for (int i = 2; i < GAME_MAP_SIZE; i += 2) {
+    for (int j = 2; j < GAME_MAP_SIZE; j += 2) {
+      game_map[i][j].state = 1;
+    }
+  }
 }
