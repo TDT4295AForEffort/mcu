@@ -175,38 +175,27 @@ int main(void)
 
   while (1) {
     counter++;
-    /*
-    // Sample joystick in X-direction
-    sample = sampleJoystick(adcSingleInputCh2);
-    char buf[150];
-    snprintf(buf, sizeof buf, "%ld", (uint32_t) sample);
-    for (unsigned int i = 0; i < sizeof(uint32_t); i++) {
-      ITM_SendChar(buf[i]);
-    }
 
-    ITM_SendChar(' ');
-
-  while (1) {
     // Sample joystick in X-direction
-    sample = sampleJoystick(adcSingleInputCh2);
-    char buf[150];
-    snprintf(buf, sizeof buf, "%.6f", 0.67888334992);
-    for (unsigned int i = 0; i < 8; i++) {
-      ITM_SendChar(buf[i]);
-    }
+    sample_x = sampleJoystick(adcSingleInputCh2);
+    // char buf[150];
+    // snprintf(buf, sizeof buf, "%.6f", 0.67888334992);
+    // for (unsigned int i = 0; i < 8; i++) {
+    //   ITM_SendChar(buf[i]);
+    // }
 
     ITM_SendChar(' ');
 
     // Sample joystick in Y-direction
-    sample = sampleJoystick(adcSingleInputCh3);
-    char buf2[150];
-    snprintf(buf2, sizeof buf2, "%.6f", sampleToInterval(sample));
-    for (unsigned int i = 0; i < sizeof(buf2); i++) {
-      ITM_SendChar(buf2[i]);
-    }
+    sample_y = sampleJoystick(adcSingleInputCh3);
+    // char buf2[150];
+    // snprintf(buf2, sizeof buf2, "%.6f", sampleToInterval(sample));
+    // for (unsigned int i = 0; i < sizeof(buf2); i++) {
+    //   ITM_SendChar(buf2[i]);
+    // }
 
     ITM_SendChar('\n');
-    */
+
 
     // Do not remove this call: Silicon Labs components process action routine
     // must be called from the super loop.
@@ -214,7 +203,7 @@ int main(void)
 
     float dt = 0.1;
 
-    move_player(0.1, 0.0, dt);
+    move_player(sampleToInterval(sample_X), sampleToInterval(sample_y), dt);
     turn_player(0.0, dt);
 
     if (counter > 100) {
