@@ -54,6 +54,8 @@ GameBlock game_map[GAME_MAP_SIZE][GAME_MAP_SIZE];
 
 volatile uint32_t sample;
 
+volatile uint32_t sample;
+
 void init(void) {
   /* Enabling clock to USART 1 and 2*/
     CMU_ClockEnable(cmuClock_USART1, true);
@@ -184,11 +186,22 @@ int main(void)
 
     ITM_SendChar(' ');
 
+  while (1) {
+    // Sample joystick in X-direction
+    sample = sampleJoystick(adcSingleInputCh2);
+    char buf[150];
+    snprintf(buf, sizeof buf, "%.6f", 0.67888334992);
+    for (unsigned int i = 0; i < 8; i++) {
+      ITM_SendChar(buf[i]);
+    }
+
+    ITM_SendChar(' ');
+
     // Sample joystick in Y-direction
     sample = sampleJoystick(adcSingleInputCh3);
     char buf2[150];
-    snprintf(buf2, sizeof buf2, "%ld", (uint32_t) sample);
-    for (unsigned int i = 0; i < sizeof(uint32_t); i++) {
+    snprintf(buf2, sizeof buf2, "%.6f", sampleToInterval(sample));
+    for (unsigned int i = 0; i < sizeof(buf2); i++) {
       ITM_SendChar(buf2[i]);
     }
 

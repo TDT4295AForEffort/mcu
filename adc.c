@@ -25,3 +25,11 @@ uint32_t sampleJoystick(ADC_SingleInput_TypeDef channel) {
   waitForAdcConversion();
   return ADC_DataSingleGet(ADC0);
 }
+
+float sampleToInterval(uint32_t sample) {
+   if (sample > 2000 || sample < 2300) {
+       return 0;
+   }
+
+  return (((float)sample - 0) / (4095 - 0)) * (1 - (-1)) + (-1);
+}
