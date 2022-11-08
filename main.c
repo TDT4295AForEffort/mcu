@@ -173,7 +173,6 @@ int main(void)
 
   while (1) {
     counter++;
-    /*
     // Sample joystick in X-direction
     sample = sampleJoystick(adcSingleInputCh2);
     printJoystickSample(sample);
@@ -185,7 +184,6 @@ int main(void)
     printJoystickSample(sample);
 
     ITM_SendChar('\n');
-    */
 
     // Do not remove this call: Silicon Labs components process action routine
     // must be called from the super loop.
@@ -197,7 +195,7 @@ int main(void)
     turn_player(0.0, dt);
 
     if (counter > 100) {
-        print_stuff();
+//        print_stuff();
         counter = 0;
     }
 
