@@ -176,21 +176,13 @@ int main(void)
     /*
     // Sample joystick in X-direction
     sample = sampleJoystick(adcSingleInputCh2);
-    char buf[150];
-    snprintf(buf, sizeof buf, "%ld", (uint32_t) sample);
-    for (unsigned int i = 0; i < sizeof(uint32_t); i++) {
-      ITM_SendChar(buf[i]);
-    }
+    printJoystickSample(sample);
 
     ITM_SendChar(' ');
 
     // Sample joystick in Y-direction
     sample = sampleJoystick(adcSingleInputCh3);
-    char buf2[150];
-    snprintf(buf2, sizeof buf2, "%ld", (uint32_t) sample);
-    for (unsigned int i = 0; i < sizeof(uint32_t); i++) {
-      ITM_SendChar(buf2[i]);
-    }
+    printJoystickSample(sample);
 
     ITM_SendChar('\n');
     */

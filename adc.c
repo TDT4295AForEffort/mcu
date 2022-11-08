@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "em_adc.h"
 #include "em_gpio.h"
 #include "em_chip.h"
@@ -24,4 +25,12 @@ uint32_t sampleJoystick(ADC_SingleInput_TypeDef channel) {
   ADC_Start(ADC0, adcStartSingle);
   waitForAdcConversion();
   return ADC_DataSingleGet(ADC0);
+}
+
+void printJoystickSample(uint32_t sample) {
+  char buf[150];
+  snprintf(buf, sizeof buf, "%ld", (uint32_t) sample);
+  for (unsigned int i = 0; i < sizeof(uint32_t); i++) {
+    ITM_SendChar(buf[i]);
+  }
 }
