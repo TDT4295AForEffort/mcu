@@ -34,3 +34,13 @@ void printJoystickSample(uint32_t sample) {
     ITM_SendChar(buf[i]);
   }
 }
+
+float convertSample(uint32_t sample) {
+  if (sample > 1500 && sample < 2500) {
+      return 0.0;
+  }
+  float fSample = sample;
+  return (fSample / 2048) - 1.0;
+
+}
+

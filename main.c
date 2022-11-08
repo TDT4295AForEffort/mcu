@@ -36,12 +36,15 @@
 #include "adc.h"
 #include "spi.h"
 #include "usart.h"
+#include "game.h"
 
 char transmitBuffer[] = "hello my name is mister buffer\n";
 #define            BUFFERSIZE    64
 char receiveBuffer[BUFFERSIZE];
 
-volatile uint32_t sample;
+GameBlock game_map[GAME_MAP_SIZE][GAME_MAP_SIZE];
+Player player;
+Enemy enemies[NUM_ENEMIES];
 
 void init(void) {
   /* Enabling clock to USART 1 and 2*/
@@ -63,6 +66,10 @@ void init(void) {
     SPI_setup(USART1_NUM, GPIO_POS1, false);
     SPI1_setupSlaveInt(receiveBuffer, BUFFERSIZE, NO_TX, NO_TX);
     memset(receiveBuffer, '\0', BUFFERSIZE);
+
+    init_map();
+    init_player();
+    init_enemies();
 }
 
 void setupSWOForPrint(void)
@@ -108,6 +115,55 @@ void setupSWOForPrint(void)
   ITM->TER  = 0x1;
 }
 
+void print_gamestate() {
+    ITM_SendChar('\n');
+    int player_x = player.x_pos;
+    int player_y = player.y_pos;
+    int cursor_x = player_x + (int)(2.5 * player.x_dir);
+    int cursor_y = player_y + (int)(2.5 * player.y_dir);
+    for (int i = 0; i < GAME_MAP_SIZE; i++) {
+        for (int j = 0; j < GAME_MAP_SIZE; j++) {
+            bool is_enemy = false;
+            for (int k = 0; k < NUM_ENEMIES; k++) {
+                int enemy_x = enemies[k].x_pos;
+                int enemy_y = enemies[k].y_pos;
+                is_enemy = (i == enemy_x && j == enemy_y);
+            }
+
+            if (i == player_x && j == player_y) {
+                ITM_SendChar('P');
+            }
+            else if (is_enemy) {
+                ITM_SendChar('E');
+            }
+            else if (i == cursor_x && j == cursor_y) {
+                ITM_SendChar('+');
+            }
+
+            else if (game_map[i][j].state != 0) {
+                ITM_SendChar('#');
+            }
+
+            else {
+
+                ITM_SendChar(' ');
+            }
+            ITM_SendChar(' ');
+        }
+        ITM_SendChar('\n');
+    }
+    ITM_SendChar('\n');
+}
+
+void print_str(char str[]) {
+  char c;
+  int i = 0;
+  do {
+      c = str[i++];
+      ITM_SendChar(c);
+  } while (c != '\0');
+}
+
 int main(void)
 {
   // Initialize Silicon Labs device, system, service(s) and protocol stack(s).
@@ -127,34 +183,36 @@ int main(void)
   setupSWOForPrint();
 
 
-
-
+  uint32_t sample_x, sample_y;
+  int c = 0;
 
   while (1) {
+    c++;
     // Sample joystick in X-direction
-    sample = sampleJoystick(adcSingleInputCh2);
-    printJoystickSample(sample);
-
-    ITM_SendChar(' ');
+    sample_x = sampleJoystick(adcSingleInputCh2);
 
     // Sample joystick in Y-direction
-    sample = sampleJoystick(adcSingleInputCh3);
-    printJoystickSample(sample);
+    sample_y = sampleJoystick(adcSingleInputCh3);
 
-    ITM_SendChar('\n');
-
+    move_player(0.0, convertSample(sample_x), 0.001);
+    turn_player(convertSample(sample_y), 0.001);
+    //move_enemies();
     // Do not remove this call: Silicon Labs components process action routine
     // must be called from the super loop.
     sl_system_process_action();
     //USART1_sendBuffer(transmitBuffer, BUFFERSIZE);
-    for (unsigned int i = 0; i < BUFFERSIZE; i++) {
-        ITM_SendChar(receiveBuffer[i]);
 
-    }
     //ITM_SendChar('\n');
     //memset(receiveBuffer, '\0', BUFFERSIZE);
     // Application process.
-
+    if (c > 1000) {
+        //printJoystickSample(sample_x);
+        //ITM_SendChar(' ');
+        //printJoystickSample(sample_y);
+        //ITM_SendChar('\n');
+        print_gamestate();
+        c = 0;
+    }
 
   }
 }
