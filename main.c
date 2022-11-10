@@ -37,14 +37,19 @@
 #include "spi.h"
 #include "usart.h"
 #include "game.h"
+#include "random.h"
+#include "serialize.h"
 
-char transmitBuffer[] = "hello my name is mister buffer\n";
-#define            BUFFERSIZE    64
-char receiveBuffer[BUFFERSIZE];
+#define BUFFERSIZE 8210 //Size of header+player+map
+
+uint8_t transmitBuffer[BUFFERSIZE];
+uint8_t receiveBuffer[BUFFERSIZE];
 
 GameBlock game_map[GAME_MAP_SIZE][GAME_MAP_SIZE];
 Player player;
 Enemy enemies[NUM_ENEMIES];
+
+uint32_t seed;
 
 void init(void) {
   /* Enabling clock to USART 1 and 2*/
@@ -54,22 +59,14 @@ void init(void) {
 
     initADC();
 
-    //master setup
-    /* Setup USART */
-    //SPI_setup(USART1_NUM, GPIO_POS1, true);
-
-    /* Setting up RX interrupt for master */
-    //SPI1_setupRXInt(NO_RX, NO_RX);
-
-    //slave setup
-
-    SPI_setup(USART1_NUM, GPIO_POS1, false);
-    SPI1_setupSlaveInt(receiveBuffer, BUFFERSIZE, NO_TX, NO_TX);
-    memset(receiveBuffer, '\0', BUFFERSIZE);
-
+    srandom(69420);
     init_map();
     init_player();
     init_enemies();
+
+    SPI_setup(USART1_NUM, GPIO_POS1, true);
+    /* Setting up RX interrupt for master */
+    SPI1_setupRXInt(NO_RX, NO_RX);
 }
 
 void setupSWOForPrint(void)
@@ -212,10 +209,14 @@ int main(void)
     sl_system_process_action();
     //USART1_sendBuffer(transmitBuffer, BUFFERSIZE);
 
+    //Fill transmit buffer with updated values of the game state
+    populate_spi_transmit_buffer(0, (uint16_t) 8210, player, game_map, transmitBuffer);
+    //For master to send
+    USART1_sendBuffer(transmitBuffer, BUFFERSIZE);
     //ITM_SendChar('\n');
     //memset(receiveBuffer, '\0', BUFFERSIZE);
     // Application process.
-    if (c > 1000) {
+    if (c > 100) {
         //printJoystickSample(sample_x);
         //ITM_SendChar(' ');
         //printJoystickSample(sample_y);
