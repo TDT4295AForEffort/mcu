@@ -7,23 +7,18 @@
 uint32_t seed = 0;
 
 // A single iteration of Bob Jenkins' One-At-A-Time hashing algorithm.
-uint32_t hashFast(uint32_t x) {
-  x += (x << 10);
-  x ^= (x >> 6);
-  x += (x << 3);
-  x ^= (x >> 11);
-  x += (x << 15);
-  return x;
-}
-
 uint32_t hash(uint32_t* x) {
-  *x = hashFast(*x);
+  *x += (*x << 10);
+  *x ^= (*x >> 6);
+  *x += (*x << 3);
+  *x ^= (*x >> 11);
+  *x += (*x << 15);
   return *x;
 }
 
 // Construct a float with half-open range [0:1] using low 23 bits.
 // All zeroes yields 0.0, all ones yields the next smallest representable value below 1.0.
-float floatConstruct(unsigned int m) {
+float floatConstruct(uint32_t m) {
   const uint32_t ieeeMantissa = 0x007FFFFF; // binary32 mantissa bitmask
   const uint32_t ieeeOne = 0x3F800000; // 1.0 in IEEE binary32
 
@@ -143,11 +138,15 @@ void init_enemies() {
   }
 }
 
-void move_enemies() {
+void move_enemies(float dt) {
   for (int i = 0; i < NUM_ENEMIES; i++) {
       float x_diff = player.x_pos - enemies[i].x_pos;
       float y_diff = player.y_pos - enemies[i].y_pos;
-      enemies[i].x_pos += 0.05 * x_diff;
-      enemies[i].y_pos += 0.05 * y_diff;
+      if (fabs(x_diff) > fabs(y_diff)) {
+          enemies[i].x_pos += x_diff * 0.5 * MOVE_SPEED * dt;
+      }
+      else {
+          enemies[i].y_pos += y_diff * 0.5 * MOVE_SPEED * dt;
+      }
   }
 }

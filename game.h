@@ -80,7 +80,7 @@ void init_map();
 void init_player();
 
 void init_enemies();
-void move_enemies();
+void move_enemies(float dt);
 
 extern GameBlock game_map[GAME_MAP_SIZE][GAME_MAP_SIZE];
 extern Player player;

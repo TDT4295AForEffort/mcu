@@ -115,12 +115,28 @@ void setupSWOForPrint(void)
   ITM->TER  = 0x1;
 }
 
+void print_str(char str[]) {
+  char c;
+  int i = 0;
+  do {
+      c = str[i++];
+      ITM_SendChar(c);
+  } while (c != '\0');
+}
+
 void print_gamestate() {
     ITM_SendChar('\n');
     int player_x = player.x_pos;
     int player_y = player.y_pos;
     int cursor_x = player_x + (int)(2.5 * player.x_dir);
     int cursor_y = player_y + (int)(2.5 * player.y_dir);
+    char buf[100];
+    gcvt(enemies[0].x_pos, 6, buf);
+    print_str(buf);
+    ITM_SendChar(' ');
+    gcvt(enemies[0].y_pos, 6, buf);
+    print_str(buf);
+    ITM_SendChar('\n');
     for (int i = 0; i < GAME_MAP_SIZE; i++) {
         for (int j = 0; j < GAME_MAP_SIZE; j++) {
             bool is_enemy = false;
@@ -155,14 +171,7 @@ void print_gamestate() {
     ITM_SendChar('\n');
 }
 
-void print_str(char str[]) {
-  char c;
-  int i = 0;
-  do {
-      c = str[i++];
-      ITM_SendChar(c);
-  } while (c != '\0');
-}
+
 
 int main(void)
 {
@@ -194,9 +203,10 @@ int main(void)
     // Sample joystick in Y-direction
     sample_y = sampleJoystick(adcSingleInputCh3);
 
-    move_player(0.0, convertSample(sample_x), 0.001);
-    turn_player(convertSample(sample_y), 0.001);
-    //move_enemies();
+    const float dt = 0.001;
+    move_player(0.0, convertSample(sample_x), dt);
+    turn_player(convertSample(sample_y), dt);
+    move_enemies(dt);
     // Do not remove this call: Silicon Labs components process action routine
     // must be called from the super loop.
     sl_system_process_action();
