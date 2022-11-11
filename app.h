@@ -14,3 +14,5 @@ void app_init(void);
  * App ticking function.
  ******************************************************************************/
 void app_process_action(void);
+
+void setupSWOForPrint(void);

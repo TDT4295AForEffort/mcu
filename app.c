@@ -27,6 +27,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "em_device.h"
 #include "em_chip.h"
 #include "em_cmu.h"
@@ -38,6 +39,7 @@
 #include "random.h"
 #include "serialize.h"
 #include "spi_fpga.h"
+#include "app.h"
 
 
 uint8_t transmitBuffer[BUFFERSIZE];
@@ -182,8 +184,10 @@ void app_process_action(void)
     //printJoystickSample(sample_y);
     //ITM_SendChar('\n');
     const float dt = 0.001;
-    move_player(0.0, convertSample(sample_x), dt);
-    turn_player(convertSample(sample_y), dt);
+    /*move_player(0.0, convertSample(sample_x), dt);
+    turn_player(convertSample(sample_y), dt);*/
+    move_player(0.0, 1.0, dt);
+    //turn_player(1.0, dt);
     move_enemies(dt);
     // Do not remove this call: Silicon Labs components process action routine
     // must be called from the super loop.
