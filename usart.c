@@ -39,6 +39,7 @@ void USART1_sendBuffer(char* txBuffer, int bytesToSend)
   USART_TypeDef *uart = USART1;
   int           ii;
 
+  GPIO_PinModeSet(gpioPortD, 3, 4, 0);  /* CS */
   /* Sending the data */
   for (ii = 0; ii < bytesToSend;  ii++)
   {
@@ -54,6 +55,7 @@ void USART1_sendBuffer(char* txBuffer, int bytesToSend)
     else
     {
       uart->TXDATA = 0;
+      GPIO_PinModeSet(gpioPortD, 3, 4, 1);  /* CS */
     }
   }
 
