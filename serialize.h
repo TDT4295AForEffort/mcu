@@ -6,6 +6,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define HEADER_BYTES 4
+#define PLAYER_BYTES 16
+#define MAP_BYTES GAME_MAP_SIZE * GAME_MAP_SIZE * 2
+#define ANGLES_BYTES 32
+#define BUFFERSIZE HEADER_BYTES+PLAYER_BYTES+MAP_BYTES //Size of header+player+map
 //#define PLAYER_BUFFER_OFFSET 4
 #define SPI_PACKET_TYPE 0
 

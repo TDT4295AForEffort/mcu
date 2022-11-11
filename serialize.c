@@ -1,9 +1,39 @@
-#include "math.h"
+#include <math.h>
 #include "serialize.h"
+
+#define M_PI_2 1.57079632679489661923
+#define M_PI_4 0.78539816339744830962
+
 
 uint32_t float_to_fixed(float input)
 {
     return (uint32_t)(round(input * (1 << 14))); //18 integral bits, 14 fractional bits
+}
+
+void populate_angle_vectors(Player player, uint8_t* transmit_buffer) {
+  //Populating buffer with player struct
+  //Got rid of vision_angle, as it is not needed in the fpga
+
+  uint32_t idx = 2810;
+  float angle = player.vision_angle + M_PI_2;
+  for (int i = 0; i < 4; i++) {
+    uint32_t x_dir = float_to_fixed(cosf(angle));
+    uint32_t y_dir = float_to_fixed(sinf(angle));
+    angle -= M_PI_4;
+    if (i == 2) {
+        //don't include forward dir (already transferred)
+        angle += M_PI_4;
+    }
+    transmit_buffer[idx++] = (x_dir >> 24) & 0xFF;
+    transmit_buffer[idx++] = (x_dir >> 16) & 0xFF;
+    transmit_buffer[idx++] = (x_dir >> 8) & 0xFF;
+    transmit_buffer[idx++] = x_dir & 0xFF;
+    transmit_buffer[idx++] = (y_dir >> 24) & 0xFF;
+    transmit_buffer[idx++] = (y_dir >> 16) & 0xFF;
+    transmit_buffer[idx++] = (y_dir >> 8) & 0xFF;
+    transmit_buffer[idx++] = y_dir & 0xFF;
+  }
+
 }
 
 void populate_spi_transmit_buffer(uint8_t packet_mode, uint16_t packet_size, Player player, GameBlock current_map[GAME_MAP_SIZE][GAME_MAP_SIZE], uint8_t* transmit_buffer){
@@ -40,16 +70,19 @@ void populate_spi_transmit_buffer(uint8_t packet_mode, uint16_t packet_size, Pla
   transmit_buffer[18] = (y_dir >> 8) & 0xFF;
   transmit_buffer[19] = y_dir & 0xFF;
 
+  uint32_t idx = 20;
 
   //Add map to buffer if packet mode is not 1
   if (packet_mode != 1){
     for (int i = 0; i < GAME_MAP_SIZE; i++){ // If map size can vary, we need to have a double loop
       for (int j = 0; j < GAME_MAP_SIZE*2; j+=2){
-          transmit_buffer[(j+20)+(i*GAME_MAP_SIZE*2)] = current_map[i][j/2].state & 0xFF;
-          transmit_buffer[(j+20+1)+(i*GAME_MAP_SIZE*2)] = current_map[i][j/2].texture & 0xFF;
+          transmit_buffer[(j+idx)+(i*GAME_MAP_SIZE*2)] = current_map[i][j/2].state & 0xFF;
+          transmit_buffer[(j+idx+1)+(i*GAME_MAP_SIZE*2)] = current_map[i][j/2].texture & 0xFF;
       }
     }
   }
+  //Populating buffer with extra directions
+  //populate_angle_vectors(player, transmit_buffer);
 
   //TODO:
   //Put game map into bitstream (done)

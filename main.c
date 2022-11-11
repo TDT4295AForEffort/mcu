@@ -40,7 +40,6 @@
 #include "random.h"
 #include "serialize.h"
 
-#define BUFFERSIZE 8210 //Size of header+player+map
 
 uint8_t transmitBuffer[BUFFERSIZE];
 uint8_t receiveBuffer[BUFFERSIZE];
@@ -199,7 +198,10 @@ int main(void)
 
     // Sample joystick in Y-direction
     sample_y = sampleJoystick(adcSingleInputCh3);
-
+    //printJoystickSample(sample_x);
+    //ITM_SendChar(' ');
+    //printJoystickSample(sample_y);
+    //ITM_SendChar('\n');
     const float dt = 0.001;
     move_player(0.0, convertSample(sample_x), dt);
     turn_player(convertSample(sample_y), dt);
@@ -207,10 +209,9 @@ int main(void)
     // Do not remove this call: Silicon Labs components process action routine
     // must be called from the super loop.
     sl_system_process_action();
-    //USART1_sendBuffer(transmitBuffer, BUFFERSIZE);
 
     //Fill transmit buffer with updated values of the game state
-    populate_spi_transmit_buffer(0, (uint16_t) 8210, player, game_map, transmitBuffer);
+    populate_spi_transmit_buffer(0, (uint16_t) BUFFERSIZE, player, game_map, transmitBuffer);
     //For master to send
     USART1_sendBuffer(transmitBuffer, BUFFERSIZE);
     //ITM_SendChar('\n');
