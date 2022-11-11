@@ -3,7 +3,7 @@
 
 #include "stdint.h"
 #include <stdbool.h>
-#define GAME_MAP_SIZE 64
+#define GAME_MAP_SIZE 8
 #define NUM_ENEMIES 1
 #define TURN_SPEED 0.5
 #define MOVE_SPEED 0.8
