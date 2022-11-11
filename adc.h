@@ -1,4 +1,4 @@
 void initADC();
-uint32_t sampleJoystick();
+uint32_t sampleJoystick(ADC_SingleInput_TypeDef channel);
 void printJoystickSample(uint32_t sample);
 float convertSample(uint32_t sample);

@@ -5,6 +5,7 @@
 #include "em_cmu.h"
 #include "em_device.h"
 #include "em_emu.h"
+#include "adc.h"
 
 void initADC() {
   CMU_ClockEnable(cmuClock_ADC0, true);

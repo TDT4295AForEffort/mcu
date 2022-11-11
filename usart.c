@@ -34,7 +34,7 @@ void USART2_sendBuffer(char* txBuffer, int bytesToSend)
   while (!(uart->STATUS & USART_STATUS_TXC)) ;
 }
 
-void USART1_sendBuffer(char* txBuffer, int bytesToSend)
+void USART1_sendBuffer(uint8_t* txBuffer, int bytesToSend)
 {
   USART_TypeDef *uart = USART1;
   int           ii;

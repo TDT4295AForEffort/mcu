@@ -17,6 +17,6 @@
 
 
 void USART2_sendBuffer(char*, int);
-void USART1_sendBuffer(char*, int);
+void USART1_sendBuffer(uint8_t*, int);
 
 #endif
