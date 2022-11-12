@@ -37,7 +37,7 @@
 #include <stdlib.h>
 //#include "time.h"
 
-#define BUFFERSIZE 8210 //Size of header+player+map
+#define BUFFERSIZE 8212 //Size of header+player+map
 #define DELTA_TIME 0.001 //To be used to calculate player position and direction
 
 uint8_t transmitBuffer[BUFFERSIZE];

@@ -3,7 +3,7 @@
 
 #include "stdint.h"
 #include <stdbool.h>
-#define GAME_MAP_SIZE 16
+#define GAME_MAP_SIZE 64
 //TODO: find nice values for these
 #define TURN_SPEED 0.5
 #define MOVE_SPEED 0.8
@@ -71,7 +71,7 @@ void place_block();
 //allocates memory and fills in initial state of map
 void init_map();
 
-void init_player();
+void init_player(float x_pos, float y_pos);
 
 extern GameBlock game_map[GAME_MAP_SIZE][GAME_MAP_SIZE];
 extern Player player;
