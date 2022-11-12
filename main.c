@@ -70,7 +70,7 @@ void init(void) {
     transmit_test->five = 1;*/
 
     init_map(); //Init the map
-    populate_spi_transmit_buffer(0, (uint8_t) 8210/*Buffer size*/, player, game_map, transmitBuffer);
+    populate_spi_transmit_buffer(0, (uint8_t) BUFFERSIZE/*Buffer size*/, player, game_map, transmitBuffer);
 
     //populate_spi_transmit_buffer_test(transmit_test, transmitBuffer);
     //populate_spi_transmit_buffer_test_player(player, transmitBuffer);
@@ -159,8 +159,8 @@ int main(void)
     sl_system_process_action();
 
     //For every loop where a button is pressed, update the player position
-    turn_player(1, DELTA_TIME); //Examples for now
-    move_player(1, 1, DELTA_TIME);
+    //turn_player(1, DELTA_TIME); //Examples for now
+    //move_player(1, 1, DELTA_TIME);
 
     //Fill transmit buffer with updated values of the game state
     populate_spi_transmit_buffer(0, (uint16_t) 8210, player, game_map, transmitBuffer);
