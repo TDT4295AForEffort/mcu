@@ -65,8 +65,9 @@ void app_init(void) {
 
     initADC();
 
-    SPIDRV_Init_t initData = SPIDRV_MASTER_USART0;
-    SPIDRV_Init(sl_spidrv_fpga_handle, &initData);
+    /*SPIDRV_Init_t initData = SPIDRV_MASTER_USART1;
+    SPIDRV_Init(sl_spidrv_fpga_handle, &initData);*/
+    sl_spidrv_init_instances();
 
     srandom(69420);
     init_map();
@@ -201,6 +202,7 @@ void app_process_action(void)
     populate_spi_transmit_buffer(0, (uint16_t) BUFFERSIZE, player, game_map, transmitBuffer);
     //For master to send
     sendBufferToFpga(transmitBuffer, BUFFERSIZE);
+
     //ITM_SendChar('\n');
     //memset(receiveBuffer, '\0', BUFFERSIZE);
     // Application process.
