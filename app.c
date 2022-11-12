@@ -40,7 +40,8 @@
 #include "serialize.h"
 #include "spi_fpga.h"
 #include "app.h"
-
+#include "spidrv.h"
+#include "sl_spidrv_instances.h"
 
 uint8_t transmitBuffer[BUFFERSIZE];
 uint8_t receiveBuffer[BUFFERSIZE];
@@ -50,7 +51,7 @@ Player player;
 Enemy enemies[NUM_ENEMIES];
 
 uint32_t seed;
-int c;
+int c = 0;
 uint32_t sample_x, sample_y;
 
 void app_init(void) {
@@ -63,6 +64,9 @@ void app_init(void) {
     setupSWOForPrint();
 
     initADC();
+
+    SPIDRV_Init_t initData = SPIDRV_MASTER_USART0;
+    SPIDRV_Init(sl_spidrv_fpga_handle, &initData);
 
     srandom(69420);
     init_map();
