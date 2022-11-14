@@ -10,11 +10,11 @@ uint32_t float_to_fixed(float input)
     return (uint32_t)(round(input * (1 << 14))); //18 integral bits, 14 fractional bits
 }
 
-void populate_angle_vectors(Player player, uint8_t* transmit_buffer) {
+int populate_angle_vectors(Player player, uint8_t* transmit_buffer, int current_idx) {
   //Populating buffer with player struct
   //Got rid of vision_angle, as it is not needed in the fpga
 
-  uint32_t idx = 2810;
+  uint32_t idx = current_idx;
   float angle = player.vision_angle + M_PI_2;
   for (int i = 0; i < 4; i++) {
     uint32_t x_dir = float_to_fixed(cosf(angle));
@@ -33,15 +33,18 @@ void populate_angle_vectors(Player player, uint8_t* transmit_buffer) {
     transmit_buffer[idx++] = (y_dir >> 8) & 0xFF;
     transmit_buffer[idx++] = y_dir & 0xFF;
   }
+  return idx;
 
 }
 
-void populate_spi_transmit_buffer(uint8_t packet_mode, uint16_t packet_size, Player player, GameBlock current_map[GAME_MAP_SIZE][GAME_MAP_SIZE], uint8_t* transmit_buffer){
+void populate_spi_transmit_buffer(uint8_t packet_mode, uint16_t packet_size, Player player, GameBlock current_map[GAME_MAP_SIZE][GAME_MAP_SIZE], Enemy enemies[NUM_ENEMIES], uint8_t* transmit_buffer){
+  int idx = 0;
+
   //Setting up header with metadata
-  transmit_buffer[0] = (packet_size >> 8) & 0xFF;
-  transmit_buffer[1] = packet_size & 0xFF;
-  transmit_buffer[2] = packet_mode; //Packet mode 0: send everything, mode 1: send only player struct
-  transmit_buffer[3] = 0b01010101; //This is a mystery value that can be useful later
+  transmit_buffer[idx++] = (packet_size >> 8) & 0xFF;
+  transmit_buffer[idx++] = packet_size & 0xFF;
+  transmit_buffer[idx++] = packet_mode; //Packet mode 0: send everything, mode 1: send only player struct
+  transmit_buffer[idx++] = 0b01010101; //This is a mystery value that can be useful later
 
   //Populating buffer with player struct
   //Got rid of vision_angle, as it is not needed in the fpga
@@ -50,40 +53,52 @@ void populate_spi_transmit_buffer(uint8_t packet_mode, uint16_t packet_size, Pla
   uint32_t x_dir = float_to_fixed(player.x_dir);
   uint32_t y_dir = float_to_fixed(player.y_dir);
 
-  transmit_buffer[4] = (x_pos >> 24) & 0xFF;
-  transmit_buffer[5] = (x_pos >> 16) & 0xFF;
-  transmit_buffer[6] = (x_pos >> 8) & 0xFF;
-  transmit_buffer[7] = x_pos & 0xFF;
+  transmit_buffer[idx++] = (x_pos >> 24) & 0xFF;
+  transmit_buffer[idx++] = (x_pos >> 16) & 0xFF;
+  transmit_buffer[idx++] = (x_pos >> 8) & 0xFF;
+  transmit_buffer[idx++] = x_pos & 0xFF;
 
-  transmit_buffer[8] = (y_pos >> 24) & 0xFF;
-  transmit_buffer[9] = (y_pos >> 16) & 0xFF;
-  transmit_buffer[10] = (y_pos >> 8) & 0xFF;
-  transmit_buffer[11] = y_pos & 0xFF;
+  transmit_buffer[idx++] = (y_pos >> 24) & 0xFF;
+  transmit_buffer[idx++] = (y_pos >> 16) & 0xFF;
+  transmit_buffer[idx++] = (y_pos >> 8) & 0xFF;
+  transmit_buffer[idx++] = y_pos & 0xFF;
 
-  transmit_buffer[12] = (x_dir >> 24) & 0xFF;
-  transmit_buffer[13] = (x_dir >> 16) & 0xFF;
-  transmit_buffer[14] = (x_dir >> 8) & 0xFF;
-  transmit_buffer[15] = x_dir & 0xFF;
+  transmit_buffer[idx++] = (x_dir >> 24) & 0xFF;
+  transmit_buffer[idx++] = (x_dir >> 16) & 0xFF;
+  transmit_buffer[idx++] = (x_dir >> 8) & 0xFF;
+  transmit_buffer[idx++] = x_dir & 0xFF;
 
-  transmit_buffer[16] = (y_dir >> 24) & 0xFF;
-  transmit_buffer[17] = (y_dir >> 16) & 0xFF;
-  transmit_buffer[18] = (y_dir >> 8) & 0xFF;
-  transmit_buffer[19] = y_dir & 0xFF;
-
-  uint32_t idx = 20;
+  transmit_buffer[idx++] = (y_dir >> 24) & 0xFF;
+  transmit_buffer[idx++] = (y_dir >> 16) & 0xFF;
+  transmit_buffer[idx++] = (y_dir >> 8) & 0xFF;
+  transmit_buffer[idx++] = y_dir & 0xFF;
 
   //Add map to buffer if packet mode is not 1
   if (packet_mode != 1){
     for (int i = 0; i < GAME_MAP_SIZE; i++){ // If map size can vary, we need to have a double loop
-      for (int j = 0; j < GAME_MAP_SIZE*2; j+=2){
-          transmit_buffer[(j+idx)+(i*GAME_MAP_SIZE*2)] = current_map[i][j/2].state & 0xFF;
-          transmit_buffer[(j+idx+1)+(i*GAME_MAP_SIZE*2)] = current_map[i][j/2].texture & 0xFF;
+      for (int j = 0; j < GAME_MAP_SIZE; j++){
+          transmit_buffer[idx++] = current_map[i][j].state & 0xFF;
+          transmit_buffer[idx++] = current_map[i][j].texture & 0xFF;
       }
     }
   }
   //Populating buffer with extra directions
-  //populate_angle_vectors(player, transmit_buffer);
+  idx = populate_angle_vectors(player, transmit_buffer, idx);
 
+  for (int i = 0; i < NUM_ENEMIES; i++) {
+      uint32_t x_pos = float_to_fixed(enemies[i].x_pos);
+      uint32_t y_pos = float_to_fixed(enemies[i].y_pos);
+
+      transmit_buffer[idx++] = (x_pos >> 24) & 0xFF;
+      transmit_buffer[idx++] = (x_pos >> 16) & 0xFF;
+      transmit_buffer[idx++] = (x_pos >> 8) & 0xFF;
+      transmit_buffer[idx++] = x_pos & 0xFF;
+
+      transmit_buffer[idx++] = (y_pos >> 24) & 0xFF;
+      transmit_buffer[idx++] = (y_pos >> 16) & 0xFF;
+      transmit_buffer[idx++] = (y_pos >> 8) & 0xFF;
+      transmit_buffer[idx++] = y_pos & 0xFF;
+  }
   //TODO:
   //Put game map into bitstream (done)
   //Find size of buffer to be sent over SPI (done)

@@ -36,6 +36,14 @@ void printJoystickSample(uint32_t sample) {
   }
 }
 
+void printConvertedJoystickSample(uint32_t sample) {
+  char buf[150];
+  gcvt(convertSample(sample), 6, buf);
+  for (unsigned int i = 0; i < sizeof(uint32_t); i++) {
+    ITM_SendChar(buf[i]);
+  }
+}
+
 float convertSample(uint32_t sample) {
   if (sample > 1500 && sample < 2500) {
       return 0.0;

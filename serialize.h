@@ -10,7 +10,8 @@
 #define PLAYER_BYTES 16
 #define MAP_BYTES GAME_MAP_SIZE * GAME_MAP_SIZE * 2
 #define ANGLES_BYTES 32
-#define BUFFERSIZE HEADER_BYTES+PLAYER_BYTES+MAP_BYTES //Size of header+player+map
+#define ENEMIES_BYTES NUM_ENEMIES * 8
+#define BUFFERSIZE HEADER_BYTES+PLAYER_BYTES+MAP_BYTES+ANGLES_BYTES+ENEMIES_BYTES //Size of header+player+map
 //#define PLAYER_BUFFER_OFFSET 4
 #define SPI_PACKET_TYPE 0
 
@@ -58,7 +59,7 @@ typedef struct GameState_send{
 };*/
 
 
-void populate_spi_transmit_buffer(uint8_t packet_mode, uint16_t packet_size, Player player, GameBlock current_map[GAME_MAP_SIZE][GAME_MAP_SIZE], uint8_t* transmit_buffer);
+void populate_spi_transmit_buffer(uint8_t packet_mode, uint16_t packet_size, Player player, GameBlock current_map[GAME_MAP_SIZE][GAME_MAP_SIZE], Enemy enemies[NUM_ENEMIES], uint8_t* transmit_buffer);
 void populate_spi_transmit_buffer_test(TestStruct* test, uint8_t* transmit_buffer);
 //void populate_spi_transmit_buffer_test_player(Player* player, uint8_t* transmit_buffer);
 

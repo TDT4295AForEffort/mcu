@@ -195,15 +195,15 @@ int main(void)
   while (1) {
     c++;
     // Sample joystick in X-direction
-    sample_x = sampleJoystick(adcSingleInputCh2);
+    sample_x = sampleJoystick(adcSingleInputCh4);
 
     // Sample joystick in Y-direction
-    sample_y = sampleJoystick(adcSingleInputCh3);
-    //printJoystickSample(sample_x);
+    sample_y = sampleJoystick(adcSingleInputCh5);
+    //printConvertedJoystickSample(sample_x);
     //ITM_SendChar(' ');
-    //printJoystickSample(sample_y);
+    //printConvertedJoystickSample(sample_y);
     //ITM_SendChar('\n');
-    const float dt = 0.001;
+    const float dt = 0.01;
     move_player(0.0, convertSample(sample_x), dt);
     turn_player(convertSample(sample_y), dt);
     move_enemies(dt);
@@ -212,13 +212,13 @@ int main(void)
     sl_system_process_action();
 
     //Fill transmit buffer with updated values of the game state
-    populate_spi_transmit_buffer(0, (uint16_t) BUFFERSIZE, player, game_map, transmitBuffer);
+    populate_spi_transmit_buffer(0, (uint16_t) BUFFERSIZE, player, game_map, enemies, transmitBuffer);
     //For master to send
     USART1_sendBuffer(transmitBuffer, BUFFERSIZE);
     //ITM_SendChar('\n');
     //memset(receiveBuffer, '\0', BUFFERSIZE);
     // Application process.
-    if (c > 100) {
+    if (c > 1000) {
         //printJoystickSample(sample_x);
         //ITM_SendChar(' ');
         //printJoystickSample(sample_y);
