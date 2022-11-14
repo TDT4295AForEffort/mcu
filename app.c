@@ -140,6 +140,11 @@ void print_gamestate() {
     gcvt(enemies[0].y_pos, 6, buf);
     print_str(buf);
     ITM_SendChar('\n');
+
+    sprintf(buf, "%d", DMADRV_MAX_XFER_COUNT); //Prints max byte amount sent by SPI in one batch
+    print_str(buf);
+    ITM_SendChar('\n');
+
     for (int i = 0; i < GAME_MAP_SIZE; i++) {
         for (int j = 0; j < GAME_MAP_SIZE; j++) {
             bool is_enemy = false;
@@ -180,10 +185,13 @@ void app_process_action(void)
 {
     c++;
     // Sample joystick in X-direction
-    sample_x = sampleJoystick(adcSingleInputCh2);
+    sample_x = sampleJoystick(adcSingleInputCh4);
 
     // Sample joystick in Y-direction
-    sample_y = sampleJoystick(adcSingleInputCh3);
+    sample_y = sampleJoystick(adcSingleInputCh5);
+
+    //TODO: The next channels should be 6 and 7 tonot overlap with spi
+
     //printJoystickSample(sample_x);
     //ITM_SendChar(' ');
     //printJoystickSample(sample_y);
