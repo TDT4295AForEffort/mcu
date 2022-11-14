@@ -37,7 +37,7 @@
 #include <stdlib.h>
 //#include "time.h"
 
-#define BUFFERSIZE 8212 //Size of header+player+map
+#define BUFFERSIZE 580 //Size of header+player+map
 #define DELTA_TIME 0.001 //To be used to calculate player position and direction
 
 uint8_t transmitBuffer[BUFFERSIZE];
@@ -160,10 +160,10 @@ int main(void)
 
     //For every loop where a button is pressed, update the player position
     //turn_player(1, DELTA_TIME); //Examples for now
-    //move_player(1, 1, DELTA_TIME);
+    move_player(1, 1, DELTA_TIME);
 
     //Fill transmit buffer with updated values of the game state
-    populate_spi_transmit_buffer(0, (uint16_t) 8210, player, game_map, transmitBuffer);
+    populate_spi_transmit_buffer(0, (uint16_t) BUFFERSIZE, player, game_map, transmitBuffer);
 
 
     //For master to send
