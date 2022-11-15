@@ -166,6 +166,12 @@ void SPI_setup(uint8_t spiNumber, uint8_t location, bool master)
                       GPIO_PinModeSet(gpioPortD, 3, gpioModeCs,   1);  /* CS */
                       GPIO_PinModeSet(gpioPortD, 2, gpioModeClk,  0);  /* Clock */
                       break;
+              case 2: /* IO configuration for the pcb*/
+                      GPIO_PinModeSet(gpioPortC, 0, gpioModeMosi, 0);  /* MOSI */
+                      GPIO_PinModeSet(gpioPortC, 1, gpioModeMiso, 0);  /* MISO */
+                      GPIO_PinModeSet(gpioPortB, 8, gpioModeCs,   1);  /* CS */
+                      GPIO_PinModeSet(gpioPortB, 7, gpioModeClk,  0);  /* Clock */
+                      break;
             default: break;
             }
             break;
