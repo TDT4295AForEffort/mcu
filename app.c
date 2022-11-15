@@ -25,8 +25,6 @@
 #include "em_emu.h"
 #include "em_gpio.h"
 #include "em_adc.h"
-#include "sl_simple_button.h"
-#include "sl_simple_button_instances.h"
 #include "adc.h"
 #include "spi.h"
 #include "usart.h"
@@ -78,9 +76,6 @@ void app_init(void)
  ******************************************************************************/
 void app_process_action(void)
 {
-  sl_simple_button_poll_instances();
-  //ITM_SendChar(sl_simple_button_get_state(&sl_button_btn0)+'0');
-
   c++;
   // Sample joystick in X-direction
      sample_x = sampleJoystick(adcSingleInputCh5);
