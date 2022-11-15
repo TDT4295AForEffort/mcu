@@ -5,8 +5,8 @@
 #include <stdbool.h>
 #define GAME_MAP_SIZE 16
 #define NUM_ENEMIES 2
-#define TURN_SPEED 0.5
-#define MOVE_SPEED 0.8
+#define TURN_SPEED 0.05
+#define MOVE_SPEED 0.04
 
 #define MAP_SIZE_MAX_X 8
 #define MAP_SIZE_MAX_Y 8

@@ -57,7 +57,7 @@ typedef struct GameState_send{
   Player_send player;
   GameBlock_send map[];
 };*/
-
+int32_t float_to_fixed(float input);
 
 void populate_spi_transmit_buffer(uint8_t packet_mode, uint16_t packet_size, Player player, GameBlock current_map[GAME_MAP_SIZE][GAME_MAP_SIZE], Enemy enemies[NUM_ENEMIES], uint8_t* transmit_buffer);
 void populate_spi_transmit_buffer_test(TestStruct* test, uint8_t* transmit_buffer);

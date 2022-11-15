@@ -5,9 +5,9 @@
 #define M_PI_4 0.78539816339744830962
 
 
-uint32_t float_to_fixed(float input)
+int32_t float_to_fixed(float input)
 {
-    return (uint32_t)(round(input * (1 << 14))); //18 integral bits, 14 fractional bits
+    return (int32_t)(round(input * (1 << 14))); //18 integral bits, 14 fractional bits
 }
 
 int populate_angle_vectors(Player player, uint8_t* transmit_buffer, int current_idx) {
@@ -17,12 +17,12 @@ int populate_angle_vectors(Player player, uint8_t* transmit_buffer, int current_
   uint32_t idx = current_idx;
   float angle = player.vision_angle + M_PI_2;
   for (int i = 0; i < 4; i++) {
-    uint32_t x_dir = float_to_fixed(cosf(angle));
-    uint32_t y_dir = float_to_fixed(sinf(angle));
+    int32_t x_dir = float_to_fixed(cosf(angle));
+    int32_t y_dir = float_to_fixed(sinf(angle));
     angle -= M_PI_4;
     if (i == 2) {
         //don't include forward dir (already transferred)
-        angle += M_PI_4;
+        angle -= M_PI_4;
     }
     transmit_buffer[idx++] = (x_dir >> 24) & 0xFF;
     transmit_buffer[idx++] = (x_dir >> 16) & 0xFF;
@@ -48,10 +48,10 @@ void populate_spi_transmit_buffer(uint8_t packet_mode, uint16_t packet_size, Pla
 
   //Populating buffer with player struct
   //Got rid of vision_angle, as it is not needed in the fpga
-  uint32_t x_pos = float_to_fixed(player.x_pos);
-  uint32_t y_pos = float_to_fixed(player.y_pos);
-  uint32_t x_dir = float_to_fixed(player.x_dir);
-  uint32_t y_dir = float_to_fixed(player.y_dir);
+  int32_t x_pos = float_to_fixed(player.x_pos);
+  int32_t y_pos = float_to_fixed(player.y_pos);
+  int32_t x_dir = float_to_fixed(player.x_dir);
+  int32_t y_dir = float_to_fixed(player.y_dir);
 
   transmit_buffer[idx++] = (x_pos >> 24) & 0xFF;
   transmit_buffer[idx++] = (x_pos >> 16) & 0xFF;
@@ -86,8 +86,8 @@ void populate_spi_transmit_buffer(uint8_t packet_mode, uint16_t packet_size, Pla
   idx = populate_angle_vectors(player, transmit_buffer, idx);
 
   for (int i = 0; i < NUM_ENEMIES; i++) {
-      uint32_t x_pos = float_to_fixed(enemies[i].x_pos);
-      uint32_t y_pos = float_to_fixed(enemies[i].y_pos);
+      int32_t x_pos = float_to_fixed(enemies[i].x_pos);
+      int32_t y_pos = float_to_fixed(enemies[i].y_pos);
 
       transmit_buffer[idx++] = (x_pos >> 24) & 0xFF;
       transmit_buffer[idx++] = (x_pos >> 16) & 0xFF;

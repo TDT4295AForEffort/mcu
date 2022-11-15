@@ -81,7 +81,7 @@ void place_block() {
 void init_player() {
   player.x_dir = 1.0;
   player.y_dir = 0.0;
-  player.x_pos = 1.5;
+  player.x_pos = 2.5;
   player.y_pos = GAME_MAP_SIZE / 2 - 0.5;
   player.vision_angle = 0.0;
 }

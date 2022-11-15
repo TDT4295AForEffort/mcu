@@ -178,22 +178,19 @@ void app_process_action(void)
   sl_simple_button_poll_instances();
   //ITM_SendChar(sl_simple_button_get_state(&sl_button_btn0)+'0');
 
-  //c++;
+  c++;
   // Sample joystick in X-direction
-     sample_x = sampleJoystick(adcSingleInputCh4);
+     sample_x = sampleJoystick(adcSingleInputCh5);
 
      // Sample joystick in Y-direction
-     sample_y = sampleJoystick(adcSingleInputCh5);
+     sample_y = sampleJoystick(adcSingleInputCh6);
      //printConvertedJoystickSample(sample_x);
      //ITM_SendChar(' ');
      //printConvertedJoystickSample(sample_y);
      //ITM_SendChar(' ');
      const float dt = 0.01;
-     //move_player(0.0, convertSample(sample_x), dt);
-     player.x_pos += 0.01;
-     if (player.x_pos >= GAME_MAP_SIZE) {
-         player.x_pos = 0.0;
-     }
+     move_player(convertSample(sample_x), convertSample(sample_y), dt);
+     //move_player(0.0, 1.0, dt);
      //turn_player(convertSample(sample_y), dt);
      move_enemies(dt);
 
@@ -204,12 +201,33 @@ void app_process_action(void)
      //ITM_SendChar('\n');
      //memset(receiveBuffer, '\0', BUFFERSIZE);
      // Application process.
-     if (c > 1000) {
+     if (c > 100) {
+         char buf[150];
+         print_str("x pos: ");
+         gcvt(player.x_pos, 6, buf);
+         print_str(buf);
+         ITM_SendChar(' ');
+         print_str("fixed point as int: ");
+         snprintf(buf, 10, "%d ", float_to_fixed(player.x_pos));
+         print_str(buf);
+         ITM_SendChar('\n');
+
+         print_str("y pos: ");
+         gcvt(player.y_pos, 6, buf);
+                  print_str(buf);
+                  ITM_SendChar(' ');
+                  print_str("fixed point as int: ");
+                  snprintf(buf, 10, "%d ", float_to_fixed(player.y_pos));
+                  print_str(buf);
+                  ITM_SendChar('\n');
+         //print_str("size of ")
          //printJoystickSample(sample_x);
          //ITM_SendChar(' ');
          //printJoystickSample(sample_y);
          //ITM_SendChar('\n');
-         //print_gamestate();
+         //player.y_pos = 1.0;
          //c = 0;
+         //print_gamestate();
+         c = 0;
      }
 }
