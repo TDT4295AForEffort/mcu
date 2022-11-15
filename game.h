@@ -8,12 +8,6 @@
 #define TURN_SPEED 0.05
 #define MOVE_SPEED 0.04
 
-#define MAP_SIZE_MAX_X 8
-#define MAP_SIZE_MAX_Y 8
-#define TEXTURE_SIZE_MAX_X 8
-#define TEXTURE_SIZE_MAX_Y 8
-#define NUMBER_OF_TEXTURES 0
-
 typedef struct GameBlock{
   // for now, state = 0 means air, state = 1 means wall
   uint8_t state; //What are we going to store in here actually?
