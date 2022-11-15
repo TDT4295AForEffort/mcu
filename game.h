@@ -31,7 +31,11 @@ void turn_player(float amount, float dt);
 
 void move_player(float move_x, float move_y, float dt);
 
-bool check_collision(float x_pos, float y_pos);
+bool check_block_collision(float x_pos, float y_pos);
+
+void check_enemy_collision();
+
+void game_over();
 
 void destroy_block();
 

@@ -67,8 +67,6 @@ void app_init(void)
   SPI1_setupRXInt(NO_RX, NO_RX);
   setupSWOForPrint();
   c = 0;
-  sl_simple_button_init_instances();
-  sl_simple_button_enable(&sl_button_btn0);
 }
 
 /***************************************************************************//**
@@ -82,6 +80,13 @@ void app_process_action(void)
 
      // Sample joystick in Y-direction
      sample_y = sampleJoystick(adcSingleInputCh6);
+
+     /* sample joystick for pcb
+        sample_x = sampleJoystick(adcSingleInputCh7);
+        sample_y = sampleJoystick(adcSingleInputCh4);
+        sample_viev = sampleJoystick(adcSingleInputCh4);
+    */
+
      //printConvertedJoystickSample(sample_x);
      //ITM_SendChar(' ');
      //printConvertedJoystickSample(sample_y);

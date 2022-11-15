@@ -17,15 +17,30 @@ void move_player(float move_x, float move_y, float dt) {
   float player_left_y = player.x_dir;
   float x_new = player.x_pos + MOVE_SPEED * dt * (move_x * player_left_x + move_y * player.x_dir);
   float y_new = player.y_pos + MOVE_SPEED * dt * (move_x * player_left_y + move_y * player.y_dir);
-  bool colliding = check_collision(x_new, y_new);
+  bool colliding = check_block_collision(x_new, y_new);
   if (!colliding) {
     player.x_pos = x_new;
     player.y_pos = y_new;
   }
+  check_enemy_collision();
+}
+
+void check_enemy_collision(){//Check if enemy is less than 0.5 away from you
+  for (int i = 0; i < NUM_ENEMIES; i++){
+      if (fabs(enemies[i].x_pos-player.x_pos) < 0.5 || fabs(enemies[i].y_pos-player.y_pos) < 0.5){
+          game_over(); //reset game state to initial
+      }
+  }
+}
+
+void game_over(){
+  init_map();
+  init_player();
+  init_enemies();
 }
 
 //Make sure you are not so close to a wall so that you clip through it. (no closer than 0.125)
-bool check_collision(float x_pos, float y_pos) {
+bool check_block_collision(float x_pos, float y_pos) {
   int x_block_pos = x_pos;
   int y_block_pos = y_pos;
   if (x_block_pos < 0 || y_block_pos < 0 || x_block_pos > GAME_MAP_SIZE || y_block_pos > GAME_MAP_SIZE) {
@@ -50,6 +65,7 @@ bool check_collision(float x_pos, float y_pos) {
   if (fract_x > 0.875 && game_map[x_block_pos][y_block_pos+1].state != 0){
       return true;
   }
+
   return false;
 }
 
@@ -113,7 +129,7 @@ void move_enemies(float dt) {
   for (int i = 0; i < NUM_ENEMIES; i++) {
       float x_new = enemies[i].x_pos + (2.0 * randomFloat() - 1.0) * 30.0 * MOVE_SPEED * dt;
       float y_new = enemies[i].y_pos + (2.0 * randomFloat() - 1.0) * 30.0 * MOVE_SPEED * dt;
-      if (!check_collision(x_new, y_new)) {
+      if (!check_block_collision(x_new, y_new)) {
           enemies[i].x_pos = x_new;
           enemies[i].y_pos = y_new;
       }
