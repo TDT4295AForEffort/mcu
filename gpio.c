@@ -1,18 +1,19 @@
 #include "em_gpio.h"
 #include "em_cmu.h"
+#include "game.h"
 
 void GPIO_EVEN_IRQHandler(void)
 {
-  ITM_SendChar('c');
   GPIO_IntClear(0x5555);
   GPIO_PinOutToggle(gpioPortE, 2);
+  place_block();
 }
 
 void GPIO_ODD_IRQHandler(void)
 {
-  ITM_SendChar('d');
   GPIO_IntClear(0xAAAA);
   GPIO_PinOutToggle(gpioPortE, 3);
+  destroy_block();
 }
 
 void initGPIO(void)
