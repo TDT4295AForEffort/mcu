@@ -29,6 +29,7 @@
 #include "spi.h"
 #include "usart.h"
 #include "utils.h"
+#include "gpio.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -61,6 +62,7 @@ void app_init(void) {
   /* Setting up RX interrupt for master */
   SPI1_setupRXInt(NO_RX, NO_RX);
   setupSWOForPrint();
+  initGPIO();
   c = 0;
 }
 
@@ -90,7 +92,7 @@ void app_process_action(void) {
   // printConvertedJoystickSample(sample_y);
   // ITM_SendChar(' ');
   const float dt = 0.01;
-  // move_player(convertSample(sample_x), convertSample(sample_y), dt);
+  move_player(convertSample(sample_x), 0.0, dt);
   turn_player(convertSample(sample_view), dt);
 
   // move_player(0.0, 1.0, dt);
@@ -105,7 +107,8 @@ void app_process_action(void) {
   // ITM_SendChar('\n');
   // memset(receiveBuffer, '\0', BUFFERSIZE);
   // Application process.
-  if (c > 100) {
+  if (c > 10000) {
+    /*
     char buf[150];
     print_str("dir x: ");
     gcvt(player.x_dir, 6, buf);
@@ -118,7 +121,7 @@ void app_process_action(void) {
 
     printConvertedJoystickSample(sample_view);
     ITM_SendChar('\n');
-    /*print_str("x pos: ");
+    print_str("x pos: ");
     gcvt(player.x_pos, 6, buf);
     print_str(buf);
     ITM_SendChar(' ');
@@ -126,6 +129,7 @@ void app_process_action(void) {
     snprintf(buf, 10, "%ld ", float_to_fixed(player.x_pos));
     print_str(buf);
     ITM_SendChar('\n');
+
 
     print_str("y pos: ");
     gcvt(player.y_pos, 6, buf);
@@ -136,6 +140,8 @@ void app_process_action(void) {
              print_str(buf);
              ITM_SendChar('\n');*/
     print_gamestate();
+    //print_str(transmitBuffer);
+    //ITM_SendChar('\n');
     // print_str("size of ")
     // printJoystickSample(sample_x);
     // ITM_SendChar(' ');
