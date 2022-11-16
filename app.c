@@ -1,19 +1,20 @@
-/***************************************************************************/ /**
-                                                                               * @file
-                                                                               * @brief Top level application functions
-                                                                               *******************************************************************************
-                                                                               * # License
-                                                                               * <b>Copyright 2020 Silicon Laboratories Inc. www.silabs.com</b>
-                                                                               *******************************************************************************
-                                                                               *
-                                                                               * The licensor of this software is Silicon Laboratories Inc. Your use of this
-                                                                               * software is governed by the terms of Silicon Labs Master Software License
-                                                                               * Agreement (MSLA) available at
-                                                                               * www.silabs.com/about-us/legal/master-software-license-agreement. This
-                                                                               * software is distributed to you in Source Code format and is governed by the
-                                                                               * sections of the MSLA applicable to Source Code.
-                                                                               *
-                                                                               ******************************************************************************/
+/***************************************************************************/
+/**
+ * @file
+ * @brief Top level application functions
+ *******************************************************************************
+ * # License
+ * <b>Copyright 2020 Silicon Laboratories Inc. www.silabs.com</b>
+ *******************************************************************************
+ *
+ * The licensor of this software is Silicon Laboratories Inc. Your use of this
+ * software is governed by the terms of Silicon Labs Master Software License
+ * Agreement (MSLA) available at
+ * www.silabs.com/about-us/legal/master-software-license-agreement. This
+ * software is distributed to you in Source Code format and is governed by the
+ * sections of the MSLA applicable to Source Code.
+ *
+ ******************************************************************************/
 #include "app.h"
 
 #include "adc.h"
@@ -39,8 +40,6 @@ GameBlock game_map[GAME_MAP_SIZE][GAME_MAP_SIZE];
 Player player;
 Enemy enemies[NUM_ENEMIES];
 
-uint32_t seed;
-
 uint32_t sample_x, sample_y, sample_view;
 int c;
 
@@ -53,7 +52,7 @@ void app_init(void) {
 
   initADC();
 
-  srandom(69420);
+  srandom(sampleJoystick(adcSingleInputCh7));
   init_map();
   init_player();
   init_enemies();
@@ -65,9 +64,10 @@ void app_init(void) {
   c = 0;
 }
 
-/***************************************************************************/ /**
-                                                                               * App ticking function.
-                                                                               ******************************************************************************/
+/***************************************************************************/
+/**
+ * App ticking function.
+ ******************************************************************************/
 void app_process_action(void) {
   c++;
   // Sample joystick in X-direction

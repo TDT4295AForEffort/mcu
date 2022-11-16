@@ -38,19 +38,21 @@ void check_enemy_collision() { // Check if enemy is less than 0.5 away from you
   }
 }
 
-void game_over() {
+void init_game() {
   init_map();
   init_player();
   init_enemies();
 }
+
+void game_over() { init_game(); }
 
 // Make sure you are not so close to a wall so that you clip through it. (no
 // closer than 0.125)
 bool check_block_collision(float x_pos, float y_pos) {
   int x_block_pos = x_pos;
   int y_block_pos = y_pos;
-  if (x_block_pos < 0 || y_block_pos < 0 || x_block_pos > GAME_MAP_SIZE ||
-      y_block_pos > GAME_MAP_SIZE) {
+  if (x_block_pos < 0 || y_block_pos < 0 || x_block_pos >= GAME_MAP_SIZE ||
+      y_block_pos >= GAME_MAP_SIZE) {
     return true;
   }
   float fract_x = x_pos - x_block_pos;
@@ -99,8 +101,12 @@ void place_block() { modify_block(1); }
 void init_player() {
   player.x_dir = 1.0;
   player.y_dir = 0.0;
-  player.x_pos = 2.5;
-  player.y_pos = GAME_MAP_SIZE / 2 - 0.5;
+  player.x_pos = GAME_MAP_SIZE * randomFloat();
+  player.y_pos = GAME_MAP_SIZE * randomFloat();
+  while (check_block_collision(player.x_pos, player.y_pos)) {
+    player.x_pos = GAME_MAP_SIZE * randomFloat();
+    player.y_pos = GAME_MAP_SIZE * randomFloat();
+  }
   player.vision_angle = 0.0;
 }
 
@@ -126,6 +132,10 @@ void init_enemies() {
   for (int i = 0; i < NUM_ENEMIES; i++) {
     enemies[i].x_pos = GAME_MAP_SIZE * randomFloat();
     enemies[i].y_pos = GAME_MAP_SIZE * randomFloat();
+    while (check_block_collision(enemies[i].x_pos, enemies[i].y_pos)) {
+      enemies[i].x_pos = GAME_MAP_SIZE * randomFloat();
+      enemies[i].y_pos = GAME_MAP_SIZE * randomFloat();
+    }
     enemies[i].x_dir = 2.0 * randomFloat() - 1.0;
     enemies[i].y_dir = 2.0 * randomFloat() - 1.0;
   }
