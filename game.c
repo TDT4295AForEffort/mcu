@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "random.h"
+#include "utils.h"
 
 void turn_player(float amount, float dt) {
   float rot_angle = -amount * TURN_SPEED * dt;
@@ -110,10 +110,12 @@ void init_map() {
     game_map[i][0].state = 1;
     game_map[i][GAME_MAP_SIZE-1].state = 1;
   }
-  //fill in blocks in checker pattern
-  for (int i = 2; i < GAME_MAP_SIZE; i += 2) {
-    for (int j = 2; j < GAME_MAP_SIZE; j += 2) {
-      //game_map[i][j].state = 1;
+  //fill in random blocks
+  for (int i = 1; i < GAME_MAP_SIZE - 1; i++) {
+    for (int j = 1; j < GAME_MAP_SIZE - 1; j++) {
+      if (randomFloat() > 0.8) {
+        game_map[i][j].state = 1;
+      }
     }
   }
 }
@@ -122,16 +124,25 @@ void init_enemies() {
   for (int i = 0; i < NUM_ENEMIES; i++) {
       enemies[i].x_pos = GAME_MAP_SIZE * randomFloat();
       enemies[i].y_pos = GAME_MAP_SIZE * randomFloat();
+      enemies[i].x_dir = 2.0 * randomFloat() - 1.0;
+      enemies[i].y_dir = 2.0 * randomFloat() - 1.0;
   }
 }
 
 void move_enemies(float dt) {
   for (int i = 0; i < NUM_ENEMIES; i++) {
-      float x_new = enemies[i].x_pos + (2.0 * randomFloat() - 1.0) * 30.0 * MOVE_SPEED * dt;
-      float y_new = enemies[i].y_pos + (2.0 * randomFloat() - 1.0) * 30.0 * MOVE_SPEED * dt;
+      float x_new = enemies[i].x_pos + enemies[i].x_dir * MOVE_SPEED * dt;
+      float y_new = enemies[i].y_pos + enemies[i].y_dir * MOVE_SPEED * dt;
       if (!check_block_collision(x_new, y_new)) {
           enemies[i].x_pos = x_new;
           enemies[i].y_pos = y_new;
+      }
+      if (randomFloat() > 0.99) {
+          float x_diff = player.x_pos - enemies[i].x_pos;
+          float y_diff = player.y_pos - enemies[i].y_pos;
+          float distance = sqrt(x_diff*x_diff + y_diff*y_diff);
+          enemies[i].x_dir = x_diff / distance;
+          enemies[i].y_dir = y_diff / distance;
       }
   }
 }

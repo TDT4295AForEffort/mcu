@@ -29,7 +29,6 @@
 #include "spi.h"
 #include "usart.h"
 #include "game.h"
-#include "random.h"
 #include "serialize.h"
 #include "utils.h"
 
@@ -105,6 +104,7 @@ void app_process_action(void)
      //memset(receiveBuffer, '\0', BUFFERSIZE);
      // Application process.
      if (c > 100) {
+         /*
          char buf[150];
          print_str("x pos: ");
          gcvt(player.x_pos, 6, buf);
@@ -117,20 +117,21 @@ void app_process_action(void)
 
          print_str("y pos: ");
          gcvt(player.y_pos, 6, buf);
-                  print_str(buf);
-                  ITM_SendChar(' ');
-                  print_str("fixed point as int: ");
-                  snprintf(buf, 10, "%d ", float_to_fixed(player.y_pos));
-                  print_str(buf);
-                  ITM_SendChar('\n');
+         print_str(buf);
+         ITM_SendChar(' ');
+         print_str("fixed point as int: ");
+         snprintf(buf, 10, "%d ", float_to_fixed(player.y_pos));
+         print_str(buf);
+         ITM_SendChar('\n');
          //print_str("size of ")
          //printJoystickSample(sample_x);
          //ITM_SendChar(' ');
          //printJoystickSample(sample_y);
          //ITM_SendChar('\n');
          //player.y_pos = 1.0;
-         //c = 0;
-         //print_gamestate();
+          *
+          */
+         print_gamestate();
          c = 0;
      }
 }

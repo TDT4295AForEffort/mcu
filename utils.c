@@ -69,15 +69,21 @@ void print_gamestate() {
     int cursor_x = player_x + (int)(2.5 * player.x_dir);
     int cursor_y = player_y + (int)(2.5 * player.y_dir);
     char buf[100];
-    gcvt(enemies[0].x_pos, 6, buf);
-    print_str(buf);
-    ITM_SendChar(' ');
-    gcvt(enemies[0].y_pos, 6, buf);
-    print_str(buf);
-    ITM_SendChar('\n');
+    for (int i = 0; i < NUM_ENEMIES; i++) {
+        print_str("enemy nr ");
+        ITM_SendChar('0'+i);
+        ITM_SendChar(' ');
+        gcvt(enemies[i].x_pos, 6, buf);
+        print_str(buf);
+        ITM_SendChar(' ');
+        gcvt(enemies[i].y_pos, 6, buf);
+        print_str(buf);
+        ITM_SendChar('\n');
+    }
+
     for (int i = 0; i < GAME_MAP_SIZE; i++) {
         for (int j = 0; j < GAME_MAP_SIZE; j++) {
-            bool is_enemy = false;
+            uint8_t is_enemy = 0;
             for (int k = 0; k < NUM_ENEMIES; k++) {
                 int enemy_x = enemies[k].x_pos;
                 int enemy_y = enemies[k].y_pos;
@@ -107,4 +113,38 @@ void print_gamestate() {
         ITM_SendChar('\n');
     }
     ITM_SendChar('\n');
+}
+
+#include "random.h"
+
+// A single iteration of Bob Jenkins' One-At-A-Time hashing algorithm.
+uint32_t hash(uint32_t* x) {
+  *x += (*x << 10);
+  *x ^= (*x >> 6);
+  *x += (*x << 3);
+  *x ^= (*x >> 11);
+  *x += (*x << 15);
+  return *x;
+}
+
+// Construct a float with half-open range [0:1] using low 23 bits.
+// All zeroes yields 0.0, all ones yields the next smallest representable value below 1.0.
+float floatConstruct(uint32_t m) {
+  const uint32_t ieeeMantissa = 0x007FFFFF; // binary32 mantissa bitmask
+  const uint32_t ieeeOne = 0x3F800000; // 1.0 in IEEE binary32
+
+  m &= ieeeMantissa;                     // Keep only mantissa bits (fractional part)
+  m |= ieeeOne;                          // Add fractional part to 1.0
+
+    //int to float
+  float  f = *(float*)(&m);       // Range [1:2]
+  return f - 1.0;                        // Range [0:1]
+}
+
+float randomFloat() {
+  return floatConstruct(hash(&seed));
+}
+
+void srandom(uint32_t new_seed) {
+  seed = new_seed;
 }

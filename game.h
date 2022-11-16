@@ -25,6 +25,8 @@ typedef struct Player{
 typedef struct Enemy{
    float x_pos;
    float y_pos;
+   float x_dir;
+   float y_dir;
 } Enemy;
 
 void turn_player(float amount, float dt);
