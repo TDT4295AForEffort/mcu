@@ -17,10 +17,10 @@ void move_player(float move_x, float move_y, float dt) {
   float player_left_y = player.x_dir;
   float x_new =
       player.x_pos +
-      MOVE_SPEED * dt * (move_x * player_left_x + move_y * player.x_dir);
+      MOVE_SPEED * dt * (move_x * player.x_dir + move_y * player_left_x);
   float y_new =
       player.y_pos +
-      MOVE_SPEED * dt * (move_x * player_left_y + move_y * player.y_dir);
+      MOVE_SPEED * dt * (move_x * player.y_dir + move_y * player_left_y);
   bool colliding = check_block_collision(x_new, y_new);
   if (!colliding) {
     player.x_pos = x_new;

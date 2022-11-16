@@ -76,10 +76,10 @@ void app_process_action(void) {
   sample_x = sampleJoystick(adcSingleInputCh5);
 
   // Sample joystick in Y-direction
-  sample_y = sampleJoystick(adcSingleInputCh6);
+  sample_y = sampleJoystick(adcSingleInputCh4);
 
   // Sample joystick rotate
-  sample_view = sampleJoystick(adcSingleInputCh4);
+  sample_view = sampleJoystick(adcSingleInputCh6);
 
   /* sample joystick for pcb
      sample_x = sampleJoystick(adcSingleInputCh7);
@@ -107,7 +107,7 @@ void app_process_action(void) {
   // ITM_SendChar('\n');
   // memset(receiveBuffer, '\0', BUFFERSIZE);
   // Application process.
-  if (c > 10000) {
+  if (c > 100) {
     /*
     char buf[150];
     print_str("dir x: ");
@@ -139,7 +139,7 @@ void app_process_action(void) {
              snprintf(buf, 10, "%ld ", float_to_fixed(player.y_pos));
              print_str(buf);
              ITM_SendChar('\n');*/
-    print_gamestate();
+    //print_gamestate();
     //print_str(transmitBuffer);
     //ITM_SendChar('\n');
     // print_str("size of ")
