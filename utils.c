@@ -116,8 +116,6 @@ void print_gamestate() {
   ITM_SendChar('\n');
 }
 
-#include "random.h"
-
 // A single iteration of Bob Jenkins' One-At-A-Time hashing algorithm.
 uint32_t hash(uint32_t *x) {
   *x += (*x << 10);
