@@ -8,13 +8,13 @@
 #define TURN_SPEED 0.05
 #define MOVE_SPEED 0.04
 
-typedef struct GameBlock{
+typedef struct GameBlock {
   // for now, state = 0 means air, state = 1 means wall
-  uint8_t state; //What are we going to store in here actually?
+  uint8_t state; // What are we going to store in here actually?
   uint8_t texture;
 } GameBlock;
 
-typedef struct Player{
+typedef struct Player {
   float x_pos;
   float y_pos;
   float vision_angle;
@@ -22,11 +22,11 @@ typedef struct Player{
   float y_dir;
 } Player;
 
-typedef struct Enemy{
-   float x_pos;
-   float y_pos;
-   float x_dir;
-   float y_dir;
+typedef struct Enemy {
+  float x_pos;
+  float y_pos;
+  float x_dir;
+  float y_dir;
 } Enemy;
 
 void turn_player(float amount, float dt);
@@ -43,7 +43,7 @@ void destroy_block();
 
 void place_block();
 
-//allocates memory and fills in initial state of map
+// allocates memory and fills in initial state of map
 void init_map();
 
 void init_player();

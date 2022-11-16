@@ -1,11 +1,11 @@
-#include <stdio.h>
+#include "adc.h"
 #include "em_adc.h"
-#include "em_gpio.h"
 #include "em_chip.h"
 #include "em_cmu.h"
 #include "em_device.h"
 #include "em_emu.h"
-#include "adc.h"
+#include "em_gpio.h"
+#include <stdio.h>
 
 void initADC() {
   CMU_ClockEnable(cmuClock_ADC0, true);
@@ -14,12 +14,13 @@ void initADC() {
 }
 
 void waitForAdcConversion() {
-  while(!(ADC0->STATUS & _ADC_STATUS_SINGLEDV_MASK));
+  while (!(ADC0->STATUS & _ADC_STATUS_SINGLEDV_MASK))
+    ;
 }
 
 uint32_t sampleJoystick(ADC_SingleInput_TypeDef channel) {
   ADC_InitSingle_TypeDef initSingle = ADC_INITSINGLE_DEFAULT;
-  initSingle.reference  = adcRefVDD;
+  initSingle.reference = adcRefVDD;
   initSingle.input = channel;
   ADC_InitSingle(ADC0, &initSingle);
 
@@ -30,7 +31,7 @@ uint32_t sampleJoystick(ADC_SingleInput_TypeDef channel) {
 
 void printJoystickSample(uint32_t sample) {
   char buf[150];
-  snprintf(buf, sizeof buf, "%ld", (uint32_t) sample);
+  snprintf(buf, sizeof buf, "%ld", (uint32_t)sample);
   for (unsigned int i = 0; i < sizeof(uint32_t); i++) {
     ITM_SendChar(buf[i]);
   }
@@ -46,10 +47,8 @@ void printConvertedJoystickSample(uint32_t sample) {
 
 float convertSample(uint32_t sample) {
   if (sample > 1500 && sample < 2500) {
-      return 0.0;
+    return 0.0;
   }
   float fSample = sample;
   return (fSample / 2048) - 1.0;
-
 }
-
