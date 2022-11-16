@@ -43,7 +43,7 @@ Enemy enemies[NUM_ENEMIES];
 
 uint32_t seed;
 
-uint32_t sample_x, sample_y;
+uint32_t sample_x, sample_y, sample_view;
 int c;
 
 
@@ -81,10 +81,13 @@ void app_process_action(void)
      // Sample joystick in Y-direction
      sample_y = sampleJoystick(adcSingleInputCh6);
 
+     // Sample joystick rotate
+     sample_view = sampleJoystick(adcSingleInputCh4);
+
      /* sample joystick for pcb
         sample_x = sampleJoystick(adcSingleInputCh7);
         sample_y = sampleJoystick(adcSingleInputCh4);
-        sample_viev = sampleJoystick(adcSingleInputCh4);
+        sample_view = sampleJoystick(adcSingleInputCh4);
     */
 
      //printConvertedJoystickSample(sample_x);
@@ -92,7 +95,9 @@ void app_process_action(void)
      //printConvertedJoystickSample(sample_y);
      //ITM_SendChar(' ');
      const float dt = 0.01;
-     move_player(convertSample(sample_x), convertSample(sample_y), dt);
+     //move_player(convertSample(sample_x), convertSample(sample_y), dt);
+     turn_player(convertSample(sample_view), dt);
+
      //move_player(0.0, 1.0, dt);
      //turn_player(convertSample(sample_y), dt);
      move_enemies(dt);
@@ -106,12 +111,23 @@ void app_process_action(void)
      // Application process.
      if (c > 100) {
          char buf[150];
-         print_str("x pos: ");
+         print_str("dir x: ");
+         gcvt(player.x_dir, 6, buf);
+         print_str(buf);
+         ITM_SendChar(' ');
+         print_str("dir y: ");
+         gcvt(player.y_dir, 6, buf);
+         print_str(buf);
+         ITM_SendChar('\n');
+
+         printConvertedJoystickSample(sample_view);
+         ITM_SendChar('\n');
+         /*print_str("x pos: ");
          gcvt(player.x_pos, 6, buf);
          print_str(buf);
          ITM_SendChar(' ');
          print_str("fixed point as int: ");
-         snprintf(buf, 10, "%d ", float_to_fixed(player.x_pos));
+         snprintf(buf, 10, "%ld ", float_to_fixed(player.x_pos));
          print_str(buf);
          ITM_SendChar('\n');
 
@@ -120,9 +136,10 @@ void app_process_action(void)
                   print_str(buf);
                   ITM_SendChar(' ');
                   print_str("fixed point as int: ");
-                  snprintf(buf, 10, "%d ", float_to_fixed(player.y_pos));
+                  snprintf(buf, 10, "%ld ", float_to_fixed(player.y_pos));
                   print_str(buf);
-                  ITM_SendChar('\n');
+                  ITM_SendChar('\n');*/
+         print_gamestate();
          //print_str("size of ")
          //printJoystickSample(sample_x);
          //ITM_SendChar(' ');
