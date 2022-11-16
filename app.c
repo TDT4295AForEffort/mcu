@@ -1,38 +1,36 @@
-/***************************************************************************//**
- * @file
- * @brief Top level application functions
- *******************************************************************************
- * # License
- * <b>Copyright 2020 Silicon Laboratories Inc. www.silabs.com</b>
- *******************************************************************************
- *
- * The licensor of this software is Silicon Laboratories Inc. Your use of this
- * software is governed by the terms of Silicon Labs Master Software License
- * Agreement (MSLA) available at
- * www.silabs.com/about-us/legal/master-software-license-agreement. This
- * software is distributed to you in Source Code format and is governed by the
- * sections of the MSLA applicable to Source Code.
- *
- ******************************************************************************/
+/***************************************************************************/ /**
+                                                                               * @file
+                                                                               * @brief Top level application functions
+                                                                               *******************************************************************************
+                                                                               * # License
+                                                                               * <b>Copyright 2020 Silicon Laboratories Inc. www.silabs.com</b>
+                                                                               *******************************************************************************
+                                                                               *
+                                                                               * The licensor of this software is Silicon Laboratories Inc. Your use of this
+                                                                               * software is governed by the terms of Silicon Labs Master Software License
+                                                                               * Agreement (MSLA) available at
+                                                                               * www.silabs.com/about-us/legal/master-software-license-agreement. This
+                                                                               * software is distributed to you in Source Code format and is governed by the
+                                                                               * sections of the MSLA applicable to Source Code.
+                                                                               *
+                                                                               ******************************************************************************/
 #include "app.h"
 
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "em_device.h"
+#include "adc.h"
+#include "em_adc.h"
 #include "em_chip.h"
 #include "em_cmu.h"
+#include "em_device.h"
 #include "em_emu.h"
 #include "em_gpio.h"
-#include "em_adc.h"
-#include "adc.h"
+#include "game.h"
+#include "serialize.h"
 #include "spi.h"
 #include "usart.h"
-#include "game.h"
-#include "random.h"
-#include "serialize.h"
 #include "utils.h"
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 uint8_t transmitBuffer[BUFFERSIZE];
 uint8_t receiveBuffer[BUFFERSIZE];
@@ -46,9 +44,7 @@ uint32_t seed;
 uint32_t sample_x, sample_y, sample_view;
 int c;
 
-
-void app_init(void)
-{
+void app_init(void) {
   CHIP_Init();
   /* Enabling clock to USART 1 and 2*/
   CMU_ClockEnable(cmuClock_USART1, true);
@@ -69,11 +65,10 @@ void app_init(void)
   c = 0;
 }
 
-/***************************************************************************//**
- * App ticking function.
- ******************************************************************************/
-void app_process_action(void)
-{
+/***************************************************************************/ /**
+                                                                               * App ticking function.
+                                                                               ******************************************************************************/
+void app_process_action(void) {
   c++;
   // Sample joystick in X-direction
      sample_x = sampleJoystick(adcSingleInputCh5);
