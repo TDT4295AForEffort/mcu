@@ -78,17 +78,27 @@ bool check_block_collision(float x_pos, float y_pos) {
   return false;
 }
 
+bool valid_block_creation(float player_x_pos, float player_y_pos, int block_x, int block_y){ //So you don't make a block you will collide with
+  if(player_x_pos < block_x+0.125 && player_x_pos > block_x-0.125 && player_y_pos < block_y+0.125 && player_y_pos > block_y-0.125){
+      return false;
+  }
+  else{
+      return true;
+  }
+}
+
 void modify_block(uint8_t state) {
   int x_block_pos = player.x_pos;
   int y_block_pos = player.y_pos;
   if (fabs(player.x_dir) > fabs(player.y_dir)) {
     x_block_pos += (player.x_dir > 0) - (player.x_dir < 0);
-    if (x_block_pos > 0 && x_block_pos < GAME_MAP_SIZE) {
+    if (x_block_pos > 0 && x_block_pos < GAME_MAP_SIZE && valid_block_creation(player.x_pos, player.y_pos, x_block_pos, y_block_pos)) {
       game_map[x_block_pos][y_block_pos].state = state;
+
     }
   } else {
     y_block_pos += (player.y_dir > 0) - (player.y_dir < 0);
-    if (y_block_pos > 0 && y_block_pos < GAME_MAP_SIZE) {
+    if (y_block_pos > 0 && y_block_pos < GAME_MAP_SIZE && valid_block_creation(player.x_pos, player.y_pos, x_block_pos, y_block_pos)) {
       game_map[x_block_pos][y_block_pos].state = state;
     }
   }
