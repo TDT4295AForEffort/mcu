@@ -90,7 +90,7 @@ void print_gamestate() {
       for (int k = 0; k < NUM_ENEMIES; k++) {
         int enemy_x = enemies[k].x_pos;
         int enemy_y = enemies[k].y_pos;
-        is_enemy = (i == enemy_x && j == enemy_y);
+        is_enemy |= (i == enemy_x && j == enemy_y);
       }
 
       if (i == player_x && j == player_y) {

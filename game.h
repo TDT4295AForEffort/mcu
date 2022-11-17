@@ -6,7 +6,7 @@
 #define GAME_MAP_SIZE 16
 #define NUM_ENEMIES 2
 #define TURN_SPEED 0.05
-#define MOVE_SPEED 0.04
+#define MOVE_SPEED 0.09
 
 typedef struct GameBlock {
   // for now, state = 0 means air, state = 1 means wall
@@ -50,6 +50,8 @@ void init_player();
 
 void init_enemies();
 void move_enemies(float dt);
+
+void init_game();
 
 extern GameBlock game_map[GAME_MAP_SIZE][GAME_MAP_SIZE];
 extern Player player;

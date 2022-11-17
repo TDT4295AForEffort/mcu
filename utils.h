@@ -7,4 +7,4 @@ void print_gamestate();
 float randomFloat();
 void srandom(uint32_t new_seed);
 
-extern uint32_t seed;
+static uint32_t seed;

@@ -79,11 +79,24 @@ void populate_spi_transmit_buffer(
 
   // Add map to buffer if packet mode is not 1
   if (packet_mode != 1) {
+    uint8_t bitmask = 0;
+    uint8_t bitcounter = 0;
+    int bm_idx = idx;
     for (int i = 0; i < GAME_MAP_SIZE;
          i++) { // If map size can vary, we need to have a double loop
       for (int j = 0; j < GAME_MAP_SIZE; j++) {
-        transmit_buffer[idx++] = current_map[i][j].state & 0xFF;
-        transmit_buffer[idx++] = current_map[i][j].texture & 0xFF;
+        idx++;
+        idx++;
+        //transmit_buffer[idx++] = current_map[i][j].state & 0xFF;
+        //transmit_buffer[idx++] = current_map[i][j].texture & 0xFF;
+        //stack all states (1 bit) into buffer
+        bitmask |= (1 << (8 - bitcounter));
+        bitcounter++;
+        if (bitcounter == 8) {
+            transmit_buffer[bm_idx++] = bitmask;
+            bitcounter = 0;
+        }
+
       }
     }
   }

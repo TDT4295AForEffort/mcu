@@ -17,10 +17,10 @@ void move_player(float move_x, float move_y, float dt) {
   float player_left_y = player.x_dir;
   float x_new =
       player.x_pos +
-      MOVE_SPEED * dt * (move_x * player_left_x + move_y * player.x_dir);
+      MOVE_SPEED * dt * (move_x * player.x_dir + move_y * player_left_x);
   float y_new =
       player.y_pos +
-      MOVE_SPEED * dt * (move_x * player_left_y + move_y * player.y_dir);
+      MOVE_SPEED * dt * (move_x * player.y_dir + move_y * player_left_y);
   bool colliding = check_block_collision(x_new, y_new);
   if (!colliding) {
     player.x_pos = x_new;
@@ -38,19 +38,21 @@ void check_enemy_collision() { // Check if enemy is less than 0.5 away from you
   }
 }
 
-void game_over() {
+void init_game() {
   init_map();
   init_player();
   init_enemies();
 }
+
+void game_over() { init_game(); }
 
 // Make sure you are not so close to a wall so that you clip through it. (no
 // closer than 0.125)
 bool check_block_collision(float x_pos, float y_pos) {
   int x_block_pos = x_pos;
   int y_block_pos = y_pos;
-  if (x_block_pos < 0 || y_block_pos < 0 || x_block_pos > GAME_MAP_SIZE ||
-      y_block_pos > GAME_MAP_SIZE) {
+  if (x_block_pos < 0 || y_block_pos < 0 || x_block_pos >= GAME_MAP_SIZE ||
+      y_block_pos >= GAME_MAP_SIZE) {
     return true;
   }
   float fract_x = x_pos - x_block_pos;
@@ -76,17 +78,27 @@ bool check_block_collision(float x_pos, float y_pos) {
   return false;
 }
 
+bool valid_block_creation(float player_x_pos, float player_y_pos, int block_x, int block_y){ //So you don't make a block you will collide with
+  if(player_x_pos < block_x+0.125 && player_x_pos > block_x-0.125 && player_y_pos < block_y+0.125 && player_y_pos > block_y-0.125){
+      return false;
+  }
+  else{
+      return true;
+  }
+}
+
 void modify_block(uint8_t state) {
   int x_block_pos = player.x_pos;
   int y_block_pos = player.y_pos;
   if (fabs(player.x_dir) > fabs(player.y_dir)) {
     x_block_pos += (player.x_dir > 0) - (player.x_dir < 0);
-    if (x_block_pos > 0 && x_block_pos < GAME_MAP_SIZE) {
+    if (x_block_pos > 0 && x_block_pos < GAME_MAP_SIZE && valid_block_creation(player.x_pos, player.y_pos, x_block_pos, y_block_pos)) {
       game_map[x_block_pos][y_block_pos].state = state;
+
     }
   } else {
     y_block_pos += (player.y_dir > 0) - (player.y_dir < 0);
-    if (y_block_pos > 0 && y_block_pos < GAME_MAP_SIZE) {
+    if (y_block_pos > 0 && y_block_pos < GAME_MAP_SIZE && valid_block_creation(player.x_pos, player.y_pos, x_block_pos, y_block_pos)) {
       game_map[x_block_pos][y_block_pos].state = state;
     }
   }
@@ -99,8 +111,12 @@ void place_block() { modify_block(1); }
 void init_player() {
   player.x_dir = 1.0;
   player.y_dir = 0.0;
-  player.x_pos = 2.5;
-  player.y_pos = GAME_MAP_SIZE / 2 - 0.5;
+  player.x_pos = GAME_MAP_SIZE * randomFloat();
+  player.y_pos = GAME_MAP_SIZE * randomFloat();
+  while (check_block_collision(player.x_pos, player.y_pos)) {
+    player.x_pos = GAME_MAP_SIZE * randomFloat();
+    player.y_pos = GAME_MAP_SIZE * randomFloat();
+  }
   player.vision_angle = 0.0;
 }
 
@@ -126,6 +142,10 @@ void init_enemies() {
   for (int i = 0; i < NUM_ENEMIES; i++) {
     enemies[i].x_pos = GAME_MAP_SIZE * randomFloat();
     enemies[i].y_pos = GAME_MAP_SIZE * randomFloat();
+    while (check_block_collision(enemies[i].x_pos, enemies[i].y_pos)) {
+      enemies[i].x_pos = GAME_MAP_SIZE * randomFloat();
+      enemies[i].y_pos = GAME_MAP_SIZE * randomFloat();
+    }
     enemies[i].x_dir = 2.0 * randomFloat() - 1.0;
     enemies[i].y_dir = 2.0 * randomFloat() - 1.0;
   }
