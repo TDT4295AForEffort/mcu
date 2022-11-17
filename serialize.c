@@ -45,10 +45,8 @@ void populate_spi_transmit_buffer(
   // Setting up header with metadata
   transmit_buffer[idx++] = (packet_size >> 8) & 0xFF;
   transmit_buffer[idx++] = packet_size & 0xFF;
-  transmit_buffer[idx++] = packet_mode; // Packet mode 0: send everything, mode
-                                        // 1: send only player struct
-  transmit_buffer[idx++] =
-      0b01010101; // This is a mystery value that can be useful later
+  transmit_buffer[idx++] = packet_mode; // Packet mode 0: send everything, mode 1: send only player struct
+  transmit_buffer[idx++] = 0b01010101; // This is a mystery value that can be useful later
 
   // Populating buffer with player struct
   // Got rid of vision_angle, as it is not needed in the fpga
@@ -80,23 +78,23 @@ void populate_spi_transmit_buffer(
   // Add map to buffer if packet mode is not 1
   if (packet_mode != 1) {
     uint8_t bitmask = 0;
-    uint8_t bitcounter = 0;
+    uint8_t bitcounter = 1;
     int bm_idx = idx;
-    for (int i = 0; i < GAME_MAP_SIZE;
-         i++) { // If map size can vary, we need to have a double loop
+    for (int i = 0; i < GAME_MAP_SIZE; i++) { // If map size can vary, we need to have a double loop
       for (int j = 0; j < GAME_MAP_SIZE; j++) {
-        idx++;
-        idx++;
+        //Old code that sent both state and texture, not as a bit map
         //transmit_buffer[idx++] = current_map[i][j].state & 0xFF;
         //transmit_buffer[idx++] = current_map[i][j].texture & 0xFF;
-        //stack all states (1 bit) into buffer
-        bitmask |= (1 << (8 - bitcounter));
-        bitcounter++;
-        if (bitcounter == 8) {
-            transmit_buffer[bm_idx++] = bitmask;
-            bitcounter = 0;
-        }
 
+        //stack all states (1 bit) into buffer
+        idx+=2; //To allign with expected length in fpga
+        bitmask |= ((current_map[i][j].state & 0x1) << (8 - bitcounter)); //Take state of each block into bit map
+        if (bitcounter == 8) {
+            transmit_buffer[bm_idx++] = bitmask; //Actually sets the values of the bit map
+            bitcounter = 0;
+            bitmask = 0;
+        }
+        bitcounter++;
       }
     }
   }
@@ -117,19 +115,9 @@ void populate_spi_transmit_buffer(
     transmit_buffer[idx++] = (y_pos >> 8) & 0xFF;
     transmit_buffer[idx++] = y_pos & 0xFF;
   }
-  // TODO:
-  // Put game map into bitstream (done)
-  // Find size of buffer to be sent over SPI (done)
-  // Add header bytes to the bitstream (done)
-  // Test that transmit works (make dummy map) (done)
-  // Implement different information in bitstream depending on SPI_PACKET_TYPE
-  // (See presentation for details) (done? more to come when fpga is more
-  // specified) Implement serializing of texture when texture format is more
-  // specified
 }
 
-void populate_spi_transmit_buffer_test(
-    /*GameBlock** current_map,*/ TestStruct *test, uint8_t *transmit_buffer) {
+void populate_spi_transmit_buffer_test(TestStruct *test, uint8_t *transmit_buffer) {
   // Testing populating test struct, we do it 8 bit at a time
   transmit_buffer[0] = (test->one >> 24) & 0xFF;
   transmit_buffer[1] = (test->one >> 16) & 0xFF;
@@ -156,17 +144,3 @@ void populate_spi_transmit_buffer_test(
   transmit_buffer[18] = (test->five >> 8) & 0xFF;
   transmit_buffer[19] = test->five & 0xFF;
 }
-
-// We decided not to use this
-/*void populate_spi_transmit_buffer_test_player(Player* player, uint8_t*
-transmit_buffer){ TestSendPlayerStruct *send_player =
-malloc(sizeof(TestSendPlayerStruct)); send_player->x_pos =
-float_to_fixed(player->x_pos); send_player->y_pos =
-float_to_fixed(player->y_pos); send_player->vision_angle =
-float_to_fixed(player->vision_angle); send_player->x_dir =
-float_to_fixed(player->x_dir); send_player->y_dir =
-float_to_fixed(player->y_dir);
-
-  //memcpy(transmit_buffer, send_player, sizeof(*send_player));
-  memcpy(transmit_buffer, player, sizeof(*player));
-}*/

@@ -93,7 +93,7 @@ void app_process_action(void) {
   // printConvertedJoystickSample(sample_y);
   // ITM_SendChar(' ');
   const float dt = 0.01;
-  move_player(convertSample(sample_x), 0.0, dt);
+  move_player(convertSample(sample_x), convertSample(sample_y), dt);
   turn_player(convertSample(sample_view), dt);
 
   // move_player(0.0, 1.0, dt);
@@ -109,9 +109,9 @@ void app_process_action(void) {
   // memset(receiveBuffer, '\0', BUFFERSIZE);
   // Application process.
   if (c > 100) {
-    /*
-    char buf[150];
-    print_str("dir x: ");
+
+    char buf[600];
+    /*print_str("dir x: ");
     gcvt(player.x_dir, 6, buf);
     print_str(buf);
     ITM_SendChar(' ');
@@ -150,7 +150,13 @@ void app_process_action(void) {
     // ITM_SendChar('\n');
     // player.y_pos = 1.0;
     // c = 0;
-    // print_gamestate();
+    for(int i = 20; i < 52; i++){
+        snprintf(buf, 6, "%02x ", transmitBuffer[i]);
+        print_str(buf);
+        ITM_SendChar('\n');
+    }
+
+    print_gamestate();
     c = 0;
   }
 }
