@@ -25,6 +25,7 @@
 #include "em_emu.h"
 #include "em_gpio.h"
 #include "game.h"
+#include "gpio.h"
 #include "serialize.h"
 #include "spi.h"
 #include "usart.h"
@@ -49,9 +50,9 @@ void app_init(void) {
   /* Enabling clock to USART 1 and 2*/
   CMU_ClockEnable(cmuClock_USART1, true);
   CMU_ClockEnable(cmuClock_USART2, true);
-  CMU_ClockEnable(cmuClock_GPIO, true);
 
   initADC();
+  initGPIO();
 
   srandom(sampleJoystick(adcSingleInputCh7));
   init_map();

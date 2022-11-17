@@ -1,9 +1,7 @@
-#include "gpio.h"
 #include "em_gpio.h"
 #include "em_cmu.h"
 #include "game.h"
 
-/*
 void GPIO_EVEN_IRQHandler(void)
 {
   GPIO_IntClear(0x5555);
@@ -17,7 +15,6 @@ void GPIO_ODD_IRQHandler(void)
   GPIO_PinOutToggle(gpioPortE, 3);
   destroy_block();
 }
-*/
 
 void initGPIO(void)
 {
