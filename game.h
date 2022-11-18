@@ -5,8 +5,8 @@
 #include <stdbool.h>
 #define GAME_MAP_SIZE 16
 #define NUM_ENEMIES 2
-#define TURN_SPEED 0.05
-#define MOVE_SPEED 0.09
+#define TURN_SPEED 0.1
+#define MOVE_SPEED 0.18
 
 typedef struct GameBlock {
   // for now, state = 0 means air, state = 1 means wall
