@@ -9,21 +9,15 @@ int32_t float_to_fixed(float input) {
       round(input * (1 << 14))); // 18 integral bits, 14 fractional bits
 }
 
-int populate_angle_vectors(Player player, uint8_t *transmit_buffer,
-                           int current_idx) {
-  // Populating buffer with player struct
-  // Got rid of vision_angle, as it is not needed in the fpga
+//Calculate additional direction vectors for the fpga
+int populate_angle_vectors(Player player, uint8_t *transmit_buffer, int current_idx) {
 
   uint32_t idx = current_idx;
-  float angle = player.vision_angle + M_PI_2;
+  float angle[] = {player.vision_angle + M_PI_2, player.vision_angle + M_PI_4, player.vision_angle - M_PI_4, player.vision_angle - M_PI_2};
   for (int i = 0; i < 4; i++) {
-    int32_t x_dir = float_to_fixed(cosf(angle));
-    int32_t y_dir = float_to_fixed(sinf(angle));
-    angle -= M_PI_4;
-    if (i == 2) {
-      // don't include forward dir (already transferred)
-      angle -= M_PI_4;
-    }
+    int32_t x_dir = float_to_fixed(cosf(angle[i]));
+    int32_t y_dir = float_to_fixed(sinf(angle[i]));
+
     transmit_buffer[idx++] = (x_dir >> 24) & 0xFF;
     transmit_buffer[idx++] = (x_dir >> 16) & 0xFF;
     transmit_buffer[idx++] = (x_dir >> 8) & 0xFF;
@@ -32,7 +26,7 @@ int populate_angle_vectors(Player player, uint8_t *transmit_buffer,
     transmit_buffer[idx++] = (y_dir >> 16) & 0xFF;
     transmit_buffer[idx++] = (y_dir >> 8) & 0xFF;
     transmit_buffer[idx++] = y_dir & 0xFF;
-  }
+}
   return idx;
 }
 
@@ -49,11 +43,11 @@ void populate_spi_transmit_buffer(
   transmit_buffer[idx++] = 0b01010101; // This is a mystery value that can be useful later
 
   // Populating buffer with player struct
-  // Got rid of vision_angle, as it is not needed in the fpga
-  int32_t x_pos = float_to_fixed(player.x_pos);
-  int32_t y_pos = float_to_fixed(player.y_pos);
-  int32_t x_dir = float_to_fixed(player.x_dir);
-  int32_t y_dir = float_to_fixed(player.y_dir);
+  // The Raycaster used the player values a bit unexpectedly, so we do a quick fix here
+  int32_t x_pos = float_to_fixed(GAME_MAP_SIZE -player.y_pos);
+  int32_t y_pos = float_to_fixed(player.x_pos);
+  int32_t x_dir = float_to_fixed(-player.y_dir);
+  int32_t y_dir = float_to_fixed(player.x_dir);
 
   transmit_buffer[idx++] = (x_pos >> 24) & 0xFF;
   transmit_buffer[idx++] = (x_pos >> 16) & 0xFF;
