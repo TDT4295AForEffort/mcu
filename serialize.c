@@ -44,10 +44,10 @@ void populate_spi_transmit_buffer(
 
   // Populating buffer with player struct
   // The Raycaster used the player values a bit unexpectedly, so we do a quick fix here
-  int32_t x_pos = float_to_fixed(GAME_MAP_SIZE -player.y_pos);
-  int32_t y_pos = float_to_fixed(player.x_pos);
-  int32_t x_dir = float_to_fixed(-player.y_dir);
-  int32_t y_dir = float_to_fixed(player.x_dir);
+  int32_t x_pos = float_to_fixed(player.x_pos);
+  int32_t y_pos = float_to_fixed(player.y_pos);
+  int32_t x_dir = float_to_fixed(player.x_dir);
+  int32_t y_dir = float_to_fixed(player.y_dir);
 
   transmit_buffer[idx++] = (x_pos >> 24) & 0xFF;
   transmit_buffer[idx++] = (x_pos >> 16) & 0xFF;
@@ -82,7 +82,7 @@ void populate_spi_transmit_buffer(
 
         //stack all states (1 bit) into buffer
         idx+=2; //To allign with expected length in fpga
-        bitmask |= ((current_map[i][j].state & 0x1) << (8 - bitcounter)); //Take state of each block into bit map
+        bitmask |= ((current_map[GAME_MAP_SIZE-1-j][i].state & 0x1) << (8 - bitcounter)); //Take state of each block into bit map
         if (bitcounter == 8) {
             transmit_buffer[bm_idx++] = bitmask; //Actually sets the values of the bit map
             bitcounter = 0;

@@ -26,7 +26,7 @@ void move_player(float move_x, float move_y, float dt) {
     player.x_pos = x_new;
     player.y_pos = y_new;
   }
-  check_enemy_collision();
+  //check_enemy_collision();
 }
 
 void check_enemy_collision() { // Check if enemy is less than 0.5 away from you
@@ -78,7 +78,8 @@ bool check_block_collision(float x_pos, float y_pos) {
   return false;
 }
 
-bool valid_block_creation(float player_x_pos, float player_y_pos, int block_x, int block_y){ //So you don't make a block you will collide with
+//Not needed anymore because new block are placed 2 blocks away
+/*bool valid_block_creation(float player_x_pos, float player_y_pos, int block_x, int block_y){ //So you don't make a block you will collide with
   if(player_x_pos < block_x+0.125 && player_x_pos > block_x-0.125 && player_y_pos < block_y+0.125 && player_y_pos > block_y-0.125){
       return false;
   }
@@ -86,20 +87,30 @@ bool valid_block_creation(float player_x_pos, float player_y_pos, int block_x, i
       return true;
   }
 }
+*/
 
 void modify_block(uint8_t state) {
   int x_block_pos = player.x_pos;
   int y_block_pos = player.y_pos;
   if (fabs(player.x_dir) > fabs(player.y_dir)) {
-    x_block_pos += (player.x_dir > 0) - (player.x_dir < 0);
-    if (x_block_pos > 0 && x_block_pos < GAME_MAP_SIZE && valid_block_creation(player.x_pos, player.y_pos, x_block_pos, y_block_pos)) {
-      game_map[x_block_pos][y_block_pos].state = state;
-
+    x_block_pos += (player.x_dir > 0)*2 - (player.x_dir < 0)*2;
+    if (x_block_pos > 0 && x_block_pos < GAME_MAP_SIZE) {
+        if(state == 0 && game_map[x_block_pos][y_block_pos].state == 1){
+            game_map[x_block_pos-1][y_block_pos].state = state;
+        }
+        else{
+            game_map[x_block_pos][y_block_pos].state = state;
+        }
     }
   } else {
-    y_block_pos += (player.y_dir > 0) - (player.y_dir < 0);
-    if (y_block_pos > 0 && y_block_pos < GAME_MAP_SIZE && valid_block_creation(player.x_pos, player.y_pos, x_block_pos, y_block_pos)) {
-      game_map[x_block_pos][y_block_pos].state = state;
+    y_block_pos += (player.y_dir > 0)*2 - (player.y_dir < 0)*2;
+    if (y_block_pos > 0 && y_block_pos < GAME_MAP_SIZE) {
+        if(state == 0 && game_map[x_block_pos][y_block_pos].state == 1){
+          game_map[x_block_pos][y_block_pos-1].state = state;
+        }
+        else{
+          game_map[x_block_pos][y_block_pos].state = state;
+        }
     }
   }
 }
@@ -129,13 +140,13 @@ void init_map() {
     game_map[i][GAME_MAP_SIZE - 1].state = 1;
   }
   // fill in random blocks
-  for (int i = 1; i < GAME_MAP_SIZE - 1; i++) {
+  /*for (int i = 1; i < GAME_MAP_SIZE - 1; i++) {
     for (int j = 1; j < GAME_MAP_SIZE - 1; j++) {
       if (randomFloat() > 0.8) {
         game_map[i][j].state = 1;
       }
     }
-  }
+  }*/
 }
 
 void init_enemies() {
@@ -153,8 +164,8 @@ void init_enemies() {
 
 void move_enemies(float dt) {
   for (int i = 0; i < NUM_ENEMIES; i++) {
-    float x_new = enemies[i].x_pos + enemies[i].x_dir * MOVE_SPEED * dt;
-    float y_new = enemies[i].y_pos + enemies[i].y_dir * MOVE_SPEED * dt;
+    float x_new = enemies[i].x_pos + enemies[i].x_dir * MOVE_SPEED/8 * dt;
+    float y_new = enemies[i].y_pos + enemies[i].y_dir * MOVE_SPEED/8 * dt;
     if (!check_block_collision(x_new, y_new)) {
       enemies[i].x_pos = x_new;
       enemies[i].y_pos = y_new;
