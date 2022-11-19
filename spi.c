@@ -170,7 +170,7 @@ void SPI_setup(uint8_t spiNumber, uint8_t location, bool master) {
     break;
   case 2:
     switch (location) {
-    case 0: /* IO configuration (USART 2, Location #0) */
+    case 0: /* IO configuration (USART 2, Location #0) *//* Testconfiguration for the pcb*/
       GPIO_PinModeSet(gpioPortC, 2, gpioModeMosi, 0); /* MOSI */
       GPIO_PinModeSet(gpioPortC, 3, gpioModeMiso, 0); /* MISO */
       GPIO_PinModeSet(gpioPortC, 5, gpioModeCs, 1);   /* CS */

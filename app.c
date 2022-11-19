@@ -59,7 +59,7 @@ void app_init(void) {
   init_player();
   init_enemies();
 
-  SPI_setup(USART1_NUM, GPIO_POS1, true);
+  SPI_setup(USART2_NUM, GPIO_POS0, true);
   /* Setting up RX interrupt for master */
   SPI1_setupRXInt(NO_RX, NO_RX);
   setupSWOForPrint();
@@ -110,7 +110,7 @@ void app_process_action(void) {
   // Application process.
   if (c > 100) {
 
-    char buf[600];
+    char buf[150];
     /*print_str("dir x: ");
     gcvt(player.x_dir, 6, buf);
     print_str(buf);
@@ -146,11 +146,12 @@ void app_process_action(void) {
     // print_str("size of ")
     // printJoystickSample(sample_x);
     // ITM_SendChar(' ');
-    // printJoystickSample(sample_y);
-    // ITM_SendChar('\n');
+    /*print_str("Joystick sample y: ");
+    printJoystickSample(sample_y);
+    ITM_SendChar('\n');*/
     // player.y_pos = 1.0;
     // c = 0;
-    for(int i = 20; i < 52; i++){
+    for(int i = 532; i < 564; i++){ //20, 52 to get bitmap map
         snprintf(buf, 6, "%02x ", transmitBuffer[i]);
         print_str(buf);
         ITM_SendChar('\n');

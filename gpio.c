@@ -20,6 +20,9 @@ void initGPIO(void)
 {
   CMU_ClockEnable(cmuClock_GPIO, true);
 
+  GPIO_PinModeSet(gpioPortF, 5, gpioModePushPull, 1); //Init LED pin PCB
+  GPIO_PinOutSet(gpioPortF, 5);
+
   GPIO_PinModeSet(gpioPortB, 9, gpioModeInputPullFilter, 1);
   GPIO_PinModeSet(gpioPortB, 10, gpioModeInputPullFilter, 1);
 
