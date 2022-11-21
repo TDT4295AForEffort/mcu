@@ -36,8 +36,8 @@ void USART1_sendBuffer(uint8_t *txBuffer, int bytesToSend) {
   int ii;
 
   //GPIO_PinModeSet(gpioPortD, 3, 4, 0); /* CS Devboard*/
-  //GPIO_PinModeSet(gpioPortB, 8, 4, 0);   /* CS PCB*/
-  GPIO_PinModeSet(gpioPortC, 5, 4, 0);   /* CS Debug*/
+  GPIO_PinModeSet(gpioPortB, 8, 4, 0);   /* CS PCB*/
+  //GPIO_PinModeSet(gpioPortC, 5, 4, 0);   /* CS Debug*/
   /* Sending the data */
   for (ii = 0; ii < bytesToSend; ii++) {
     /* Waiting for the usart to be ready */
@@ -51,8 +51,8 @@ void USART1_sendBuffer(uint8_t *txBuffer, int bytesToSend) {
     } else {
       uart->TXDATA = 0;
       //GPIO_PinModeSet(gpioPortD, 3, 4, 1); /* CS */
-      //GPIO_PinModeSet(gpioPortB, 8, 4, 1);   /* CS PCB*/
-      GPIO_PinModeSet(gpioPortC, 5, 4, 0);   /* CS Debug*/
+      GPIO_PinModeSet(gpioPortB, 8, 4, 1);   /* CS PCB*/
+      //GPIO_PinModeSet(gpioPortC, 5, 4, 0);   /* CS Debug*/
     }
   }
 

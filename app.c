@@ -59,10 +59,12 @@ void app_init(void) {
   init_player();
   init_enemies();
 
-  SPI_setup(USART2_NUM, GPIO_POS0, true); //PCB MCU to pins out
-  //SPI_setup(USART1_NUM, GPIO_POS0, true); //PCB MCU straight to FPGA
+  //SPI_setup(USART2_NUM, GPIO_POS0, true); //PCB MCU to pins out
+  //SPI_setup(USART1_NUM, GPIO_POS1, true); //PCB MCU straight to FPGA
+  SPI_setup(USART1_NUM, GPIO_POS0, true);
   /* Setting up RX interrupt for master */
-  SPI2_setupRXInt(NO_RX, NO_RX);
+  //SPI2_setupRXInt(NO_RX, NO_RX);
+  SPI1_setupRXInt(NO_RX, NO_RX);
   //setupSWOForPrint();
   c = 0;
 }
@@ -74,19 +76,19 @@ void app_init(void) {
 void app_process_action(void) {
   c++;
   // Sample joystick in X-direction
-  sample_x = sampleJoystick(adcSingleInputCh5);
+  /*sample_x = sampleJoystick(adcSingleInputCh5);
 
   // Sample joystick in Y-direction
   sample_y = sampleJoystick(adcSingleInputCh4);
 
   // Sample joystick rotate
-  sample_view = sampleJoystick(adcSingleInputCh6);
+  sample_view = sampleJoystick(adcSingleInputCh6);*/
 
-  /* sample joystick for pcb
-     sample_x = sampleJoystick(adcSingleInputCh7);
-     sample_y = sampleJoystick(adcSingleInputCh4);
-     sample_view = sampleJoystick(adcSingleInputCh4);
- */
+   //sample joystick for pcb
+   sample_x = sampleJoystick(adcSingleInputCh4);
+   sample_y = sampleJoystick(adcSingleInputCh7);
+   //sample_view = sampleJoystick(adcSingleInputCh4);
+
 
   // printConvertedJoystickSample(sample_x);
   //ITM_SendChar('A');
@@ -95,7 +97,7 @@ void app_process_action(void) {
   // ITM_SendChar(' ');
   const float dt = 0.01;
   move_player(convertSample(sample_x), convertSample(sample_y), dt);
-  turn_player(convertSample(sample_view), dt);
+  turn_player(/*convertSample(sample_view)*/0, dt);
 
   // move_player(0.0, 1.0, dt);
   // turn_player(convertSample(sample_y), dt);
@@ -105,13 +107,14 @@ void app_process_action(void) {
   populate_spi_transmit_buffer(0, (uint16_t)BUFFERSIZE, player, game_map,
                                enemies, transmitBuffer);
   // For master to send
-  USART2_sendBuffer(transmitBuffer, BUFFERSIZE);
+  //USART2_sendBuffer(transmitBuffer, BUFFERSIZE); //Debug
+  USART1_sendBuffer(transmitBuffer, BUFFERSIZE); //Regular
   // ITM_SendChar('\n');
   // memset(receiveBuffer, '\0', BUFFERSIZE);
   // Application process.
   if (c > 100) {
 
-    char buf[150];
+    //char buf[150];
     /*print_str("dir x: ");
     gcvt(player.x_dir, 6, buf);
     print_str(buf);
