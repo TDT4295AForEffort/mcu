@@ -30,7 +30,7 @@ int main(void) {
   // Initialize Silicon Labs device, system, service(s) and protocol stack(s).
   // Note that if the kernel is present, processing task(s) will be created by
   // this call.
-  sl_system_init();
+  //sl_system_init();
 
   // Initialize the application. For example, create periodic timer(s) or
   // task(s) if the kernel is present.
@@ -38,19 +38,19 @@ int main(void) {
 
 #if defined(SL_CATALOG_KERNEL_PRESENT)
   // Start the kernel. Task(s) created in app_init() will start running.
-  sl_system_kernel_start();
+  //sl_system_kernel_start();
 #else // SL_CATALOG_KERNEL_PRESENT
   while (1) {
     // Do not remove this call: Silicon Labs components process action routine
     // must be called from the super loop.
-    sl_system_process_action();
+    //sl_system_process_action();
 
     // Application process.
     app_process_action();
 
 #if defined(SL_CATALOG_POWER_MANAGER_PRESENT)
     // Let the CPU go to sleep if the system allows it.
-    sl_power_manager_sleep();
+    //sl_power_manager_sleep();
 #endif
   }
 #endif // SL_CATALOG_KERNEL_PRESENT

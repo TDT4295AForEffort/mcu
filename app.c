@@ -59,11 +59,11 @@ void app_init(void) {
   init_player();
   init_enemies();
 
-  SPI_setup(USART2_NUM, GPIO_POS0, true);
+  SPI_setup(USART2_NUM, GPIO_POS0, true); //PCB MCU to pins out
+  //SPI_setup(USART1_NUM, GPIO_POS0, true); //PCB MCU straight to FPGA
   /* Setting up RX interrupt for master */
-  SPI1_setupRXInt(NO_RX, NO_RX);
-  setupSWOForPrint();
-  initGPIO();
+  SPI2_setupRXInt(NO_RX, NO_RX);
+  //setupSWOForPrint();
   c = 0;
 }
 
@@ -89,7 +89,8 @@ void app_process_action(void) {
  */
 
   // printConvertedJoystickSample(sample_x);
-  // ITM_SendChar(' ');
+  //ITM_SendChar('A');
+  //ITM_SendChar('\n');
   // printConvertedJoystickSample(sample_y);
   // ITM_SendChar(' ');
   const float dt = 0.01;
@@ -104,7 +105,7 @@ void app_process_action(void) {
   populate_spi_transmit_buffer(0, (uint16_t)BUFFERSIZE, player, game_map,
                                enemies, transmitBuffer);
   // For master to send
-  USART1_sendBuffer(transmitBuffer, BUFFERSIZE);
+  USART2_sendBuffer(transmitBuffer, BUFFERSIZE);
   // ITM_SendChar('\n');
   // memset(receiveBuffer, '\0', BUFFERSIZE);
   // Application process.
@@ -151,13 +152,13 @@ void app_process_action(void) {
     ITM_SendChar('\n');*/
     // player.y_pos = 1.0;
     // c = 0;
-    for(int i = 532; i < 564; i++){ //20, 52 to get bitmap map
+    /*for(int i = 532; i < 564; i++){ //20, 52 to get bitmap map
         snprintf(buf, 6, "%02x ", transmitBuffer[i]);
         print_str(buf);
         ITM_SendChar('\n');
     }
 
-    print_gamestate();
+    print_gamestate();*/
     c = 0;
   }
 }
