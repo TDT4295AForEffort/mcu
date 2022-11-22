@@ -43,9 +43,11 @@ Player player;
 Enemy enemies[NUM_ENEMIES];
 
 uint32_t sample_x, sample_y, sample_view;
-int c;
+uint32_t counter;
 
 void app_init(void) {
+  counter = 0;
+
   CHIP_Init();
   /* Enabling clock to USART 1 and 2*/
   CMU_ClockEnable(cmuClock_USART1, true);
@@ -67,8 +69,7 @@ void app_init(void) {
   /* Setting up RX interrupt for master */
   //SPI2_setupRXInt(NO_RX, NO_RX);
   SPI1_setupRXInt(NO_RX, NO_RX);
-  //setupSWOForPrint();
-  c = 0;
+  setupSWOForPrint();
 }
 
 /***************************************************************************/
@@ -76,7 +77,7 @@ void app_init(void) {
  * App ticking function.
  ******************************************************************************/
 void app_process_action(void) {
-  c++;
+  counter++;
   // Sample joystick in X-direction
   /*sample_x = sampleJoystick(adcSingleInputCh5);
 
@@ -114,7 +115,9 @@ void app_process_action(void) {
   // ITM_SendChar('\n');
   // memset(receiveBuffer, '\0', BUFFERSIZE);
   // Application process.
-  if (c > 100) {
+  if (counter % 100 == 0) {
+    ITM_SendChar(counter);
+    ITM_SendChar('\n');
 
     //char buf[150];
     /*print_str("dir x: ");
@@ -164,6 +167,5 @@ void app_process_action(void) {
     }
 
     print_gamestate();*/
-    c = 0;
   }
 }

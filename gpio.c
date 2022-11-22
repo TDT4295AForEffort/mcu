@@ -3,9 +3,15 @@
 #include "game.h"
 #include "utils.h"
 
+#define DEBOUNCE_TICKS 20
+
+uint32_t prev_counter;
+
 void GPIO_EVEN_IRQHandler(void)
 {
   GPIO_IntClear(0xFFFF);
+  if (counter - prev_counter < DEBOUNCE_TICKS) return;
+  prev_counter = counter;
   destroy_block();
 #ifdef DEVBOARD
   GPIO_PinOutToggle(gpioPortE, 2);
@@ -17,6 +23,8 @@ void GPIO_EVEN_IRQHandler(void)
 void GPIO_ODD_IRQHandler(void)
 {
   GPIO_IntClear(0xFFFF);
+  if (counter - prev_counter < DEBOUNCE_TICKS) return;
+  prev_counter = counter;
   place_block();
 #ifdef DEVBOARD
   GPIO_PinOutToggle(gpioPortE, 3);
@@ -28,6 +36,7 @@ void GPIO_ODD_IRQHandler(void)
 
 void initGPIO(void)
 {
+  prev_counter = 0;
   CMU_ClockEnable(cmuClock_GPIO, true);
   NVIC_EnableIRQ(GPIO_EVEN_IRQn);
   NVIC_EnableIRQ(GPIO_ODD_IRQn);

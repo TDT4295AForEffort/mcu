@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+uint32_t seed;
+
 void setupSWOForPrint(void) {
   /* Enable GPIO clock. */
   CMU->HFPERCLKEN0 |= CMU_HFPERCLKEN0_GPIO;

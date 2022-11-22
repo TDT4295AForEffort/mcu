@@ -10,4 +10,6 @@ void print_gamestate();
 float randomFloat();
 void srandom(uint32_t new_seed);
 
-static uint32_t seed;
+extern uint32_t counter;
+
+extern uint32_t seed;
