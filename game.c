@@ -16,7 +16,7 @@ void move_player(float move_x, float move_y, float dt) {
   float player_left_x = -player.y_dir;
   float player_left_y = player.x_dir;
   float dx = MOVE_SPEED * dt * (move_x * player.x_dir + move_y * player_left_x);
-  float dy = MOVE_SPEED * dt * (move_y * player.y_dir + move_x * player_left_y);
+  float dy = MOVE_SPEED * dt * (move_x * player.y_dir + move_y * player_left_y);
   float x_new = player.x_pos + dx;
   float y_new = player.y_pos + dy;
   int x = x_new;
