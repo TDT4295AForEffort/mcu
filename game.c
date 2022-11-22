@@ -89,16 +89,20 @@ bool check_block_collision(float x_pos, float y_pos) {
 */
 
 void modify_block(uint8_t state) {
-  uint8_t collided = 0;
+
   float x_ray = 0.1 * player.x_dir;
   float y_ray = 0.1 * player.y_dir;
   float x_pos = player.x_pos;
   float y_pos = player.y_pos;
-  while (!collided) {
+  while (1) {
       int x = x_pos;
       int y = y_pos;
+      if (x == 0 || x == GAME_MAP_SIZE-1 || y == 0 || y == GAME_MAP_SIZE-1) {
+          x_pos -= x_ray;
+          y_pos -= y_ray;
+          break;
+      }
       if (game_map[x][y].state == 1) {
-          collided = 1;
           break;
       }
       x_pos += x_ray;

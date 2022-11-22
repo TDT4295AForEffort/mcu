@@ -3,7 +3,7 @@
 #include "game.h"
 #include "utils.h"
 
-#define DEBOUNCE_TICKS 20
+#define DEBOUNCE_TICKS 35
 
 uint32_t prev_counter;
 
@@ -49,7 +49,6 @@ void initGPIO(void)
 
   GPIO_PinModeSet(gpioPortE, 2, gpioModePushPull, 0);
   GPIO_PinModeSet(gpioPortE, 3, gpioModePushPull, 0);
-
 
 #else
   GPIO_PinModeSet(gpioPortF, 5, gpioModePushPull, 1); //Init LED pin PCB
