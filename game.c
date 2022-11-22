@@ -90,29 +90,30 @@ bool check_block_collision(float x_pos, float y_pos) {
 */
 
 void modify_block(uint8_t state) {
-  int x_block_pos = player.x_pos;
-  int y_block_pos = player.y_pos;
-  if (fabs(player.x_dir) > fabs(player.y_dir)) {
-    x_block_pos += (player.x_dir > 0)*2 - (player.x_dir < 0)*2;
-    if (x_block_pos > 0 && x_block_pos < GAME_MAP_SIZE) {
-        if(state == 0 && game_map[x_block_pos][y_block_pos].state == 1){
-            game_map[x_block_pos-1][y_block_pos].state = state;
-        }
-        else{
-            game_map[x_block_pos][y_block_pos].state = state;
-        }
-    }
-  } else {
-    y_block_pos += (player.y_dir > 0)*2 - (player.y_dir < 0)*2;
-    if (y_block_pos > 0 && y_block_pos < GAME_MAP_SIZE) {
-        if(state == 0 && game_map[x_block_pos][y_block_pos].state == 1){
-          game_map[x_block_pos][y_block_pos-1].state = state;
-        }
-        else{
-          game_map[x_block_pos][y_block_pos].state = state;
-        }
-    }
+  uint8_t collided = 0;
+  float x_ray = 0.1 * player.x_dir;
+  float y_ray = 0.1 * player.y_dir;
+  float x_pos = player.x_pos;
+  float y_pos = player.y_pos;
+  while (!collided) {
+      int x = x_pos;
+      int y = y_pos;
+      if (game_map[x][y].state == 1) {
+          collided = 1;
+          break;
+      }
+      x_pos += x_ray;
+      y_pos += y_ray;
   }
+  int x = x_pos;
+  int y = y_pos;
+  if (state != 0) {
+      x_pos -= x_ray;
+      y_pos -= y_ray;
+      x = x_pos;
+      y = y_pos;
+  }
+  game_map[x][y].state = state;
 }
 
 void destroy_block() { modify_block(0); }

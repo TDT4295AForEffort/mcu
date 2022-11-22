@@ -59,9 +59,11 @@ void app_init(void) {
   init_player();
   init_enemies();
 
-  //SPI_setup(USART2_NUM, GPIO_POS0, true); //PCB MCU to pins out
-  //SPI_setup(USART1_NUM, GPIO_POS1, true); //PCB MCU straight to FPGA
-  SPI_setup(USART1_NUM, GPIO_POS0, true);
+#ifdef DEVBOARD
+  SPI_setup(USART1_NUM, GPIO_POS1, true);
+#else
+  SPI_setup(USART1_NUM, GPIO_POS0, true); //PCB MCU straight to FPGA
+#endif
   /* Setting up RX interrupt for master */
   //SPI2_setupRXInt(NO_RX, NO_RX);
   SPI1_setupRXInt(NO_RX, NO_RX);
@@ -85,9 +87,9 @@ void app_process_action(void) {
   sample_view = sampleJoystick(adcSingleInputCh6);*/
 
    //sample joystick for pcb
-   sample_x = sampleJoystick(adcSingleInputCh0);
-   sample_y = sampleJoystick(adcSingleInputCh3);
-   sample_view = sampleJoystick(adcSingleInputCh4);
+   sample_x = sampleJoystick(adcSingleInputCh4);
+   sample_y = 2048;//sampleJoystick(adcSingleInputCh4);
+   sample_view = sampleJoystick(adcSingleInputCh5);
 
 
   // printConvertedJoystickSample(sample_x);
