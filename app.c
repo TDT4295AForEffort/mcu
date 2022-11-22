@@ -34,6 +34,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "sl_simple_button_instances.h"
+#include "sl_simple_button_btn0_config.h"
+#include "sl_simple_button_config.h"
 
 uint8_t transmitBuffer[BUFFERSIZE];
 uint8_t receiveBuffer[BUFFERSIZE];
@@ -41,6 +44,8 @@ uint8_t receiveBuffer[BUFFERSIZE];
 GameBlock game_map[GAME_MAP_SIZE][GAME_MAP_SIZE];
 Player player;
 Enemy enemies[NUM_ENEMIES];
+
+sl_button_state_t previous_state = 0;
 
 uint32_t sample_x, sample_y, sample_view;
 int c;
@@ -52,12 +57,44 @@ void app_init(void) {
   CMU_ClockEnable(cmuClock_USART2, true);
 
   initADC();
-  initGPIO();
+//  initGPIO();
+
+  sl_button_init(&sl_button_btn0);
 
   srandom(sampleJoystick(adcSingleInputCh7));
   init_map();
   init_player();
   init_enemies();
+
+    CMU_ClockEnable(cmuClock_GPIO, true);
+
+    GPIO_PinModeSet(gpioPortF, 5, gpioModePushPull, 1); //Init LED pin PCB
+    GPIO_PinOutSet(gpioPortF, 5);
+
+    //GPIO_PinModeSet(gpioPortB, 9, gpioModeInputPullFilter, 1);
+    //GPIO_PinModeSet(gpioPortB, 10, gpioModeInputPullFilter, 1);
+
+    GPIO_PinModeSet(gpioPortB, 12, gpioModeInputPullFilter, 1); // Init button pcb
+    GPIO_PinModeSet(gpioPortA, 14, gpioModeInputPullFilter, 1); // Init button pcb
+
+//    GPIO_PinModeSet(gpioPortD, 2, gpioModeInputPullFilter, 1); // Init button devboard
+
+    GPIO_PinModeSet(gpioPortE, 2, gpioModePushPull, 0);
+    GPIO_PinModeSet(gpioPortE, 3, gpioModePushPull, 0);
+
+//    NVIC_EnableIRQ(GPIO_EVEN_IRQn);
+//    NVIC_EnableIRQ(GPIO_ODD_IRQn);
+
+    // Falling-edge interrupts
+    //GPIO_ExtIntConfig(gpioPortB, 9, 9, 0, 1, true);
+    //GPIO_ExtIntConfig(gpioPortB, 10, 10, 0, 1, true);
+
+    // Devboard falling edge interrupt
+//    GPIO_ExtIntConfig(gpioPortD, 2, 2, 0, 1, true);
+
+    // Pcb falling edge interrupt
+    GPIO_ExtIntConfig(gpioPortB, 12, 12, 0, 1, true);
+    GPIO_ExtIntConfig(gpioPortA, 14, 14, 0, 1, true);
 
   //SPI_setup(USART2_NUM, GPIO_POS0, true); //PCB MCU to pins out
   //SPI_setup(USART1_NUM, GPIO_POS1, true); //PCB MCU straight to FPGA
@@ -65,7 +102,7 @@ void app_init(void) {
   /* Setting up RX interrupt for master */
   //SPI2_setupRXInt(NO_RX, NO_RX);
   SPI1_setupRXInt(NO_RX, NO_RX);
-  //setupSWOForPrint();
+//  setupSWOForPrint();
   c = 0;
 }
 
@@ -88,6 +125,19 @@ void app_process_action(void) {
    sample_x = sampleJoystick(adcSingleInputCh0);
    sample_y = sampleJoystick(adcSingleInputCh3);
    sample_view = sampleJoystick(adcSingleInputCh4);
+
+   // Button
+   sl_button_poll_step(&sl_button_btn0);
+   sl_button_state_t state = sl_button_get_state(&sl_button_btn0);
+   if (previous_state == 0 && state == 1) {
+       GPIO_PinOutToggle(gpioPortE, 2);
+       GPIO_PinOutToggle(gpioPortF, 5); //Toggle LED pcb
+       place_block();
+//       ITM_SendChar('1');
+   } else {
+//       ITM_SendChar('0');
+   }
+   previous_state = state;
 
 
   // printConvertedJoystickSample(sample_x);

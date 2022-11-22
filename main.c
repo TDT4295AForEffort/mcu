@@ -30,7 +30,7 @@ int main(void) {
   // Initialize Silicon Labs device, system, service(s) and protocol stack(s).
   // Note that if the kernel is present, processing task(s) will be created by
   // this call.
-  //sl_system_init();
+  sl_system_init();
 
   // Initialize the application. For example, create periodic timer(s) or
   // task(s) if the kernel is present.
@@ -43,7 +43,7 @@ int main(void) {
   while (1) {
     // Do not remove this call: Silicon Labs components process action routine
     // must be called from the super loop.
-    //sl_system_process_action();
+    sl_system_process_action();
 
     // Application process.
     app_process_action();
