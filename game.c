@@ -15,17 +15,20 @@ void turn_player(float amount, float dt) {
 void move_player(float move_x, float move_y, float dt) {
   float player_left_x = -player.y_dir;
   float player_left_y = player.x_dir;
-  float x_new =
-      player.x_pos +
-      MOVE_SPEED * dt * (move_x * player.x_dir + move_y * player_left_x);
-  float y_new =
-      player.y_pos +
-      MOVE_SPEED * dt * (move_x * player.y_dir + move_y * player_left_y);
-  bool colliding = check_block_collision(x_new, y_new);
-  if (!colliding) {
-    player.x_pos = x_new;
-    player.y_pos = y_new;
+  float dx = MOVE_SPEED * dt * (move_x * player.x_dir + move_y * player_left_x);
+  float dy = MOVE_SPEED * dt * (move_y * player.y_dir + move_x * player_left_y);
+  float x_new = player.x_pos + dx;
+  float y_new = player.y_pos + dy;
+  int x = x_new;
+  int y = y_new;
+  if (game_map[x][y].state != 0) {
+      int x_player = player.x_pos;
+      int y_player = player.y_pos;
+      if (x != x_player) dx = 0.0;
+      if (y != y_player) dy = 0.0;
   }
+  player.x_pos += dx;
+  player.y_pos += dy;
   check_enemy_collision();
 }
 
