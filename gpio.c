@@ -4,18 +4,34 @@
 
 void GPIO_EVEN_IRQHandler(void)
 {
-  GPIO_IntClear(0x5555);
-  GPIO_PinOutToggle(gpioPortE, 2);
-  GPIO_PinOutToggle(gpioPortF, 5); //Toggle LED pcb
-  place_block();
+  int is_destroy = GPIO_PinInGet(gpioPortA, 14);
+  if (is_destroy) {
+      GPIO_IntClear(0xFFFF);
+      GPIO_PinOutToggle(gpioPortE, 2);
+      GPIO_PinOutToggle(gpioPortF, 5); //Toggle LED pcb
+      destroy_block();
+  } else {
+      GPIO_IntClear(0xFFFF);
+      GPIO_PinOutToggle(gpioPortE, 2);
+      GPIO_PinOutToggle(gpioPortF, 5); //Toggle LED pcb
+      place_block();
+  }
 }
 
 void GPIO_ODD_IRQHandler(void)
 {
-  GPIO_IntClear(0xAAAA);
-  GPIO_PinOutToggle(gpioPortE, 3);
-  GPIO_PinOutToggle(gpioPortF, 5); //Toggle LED pcb
-  destroy_block();
+  int is_destroy = GPIO_PinInGet(gpioPortA, 14);
+  if (is_destroy) {
+      GPIO_IntClear(0xFFFF);
+      GPIO_PinOutToggle(gpioPortE, 2);
+      GPIO_PinOutToggle(gpioPortF, 5); //Toggle LED pcb
+      destroy_block();
+  } else {
+      GPIO_IntClear(0xFFFF);
+      GPIO_PinOutToggle(gpioPortE, 2);
+      GPIO_PinOutToggle(gpioPortF, 5); //Toggle LED pcb
+      place_block();
+  }
 }
 
 void initGPIO(void)
@@ -29,7 +45,7 @@ void initGPIO(void)
   //GPIO_PinModeSet(gpioPortB, 10, gpioModeInputPullFilter, 1);
 
   GPIO_PinModeSet(gpioPortB, 12, gpioModeInputPullFilter, 1); // Init button pcb
-  GPIO_PinModeSet(gpioPortA, 8, gpioModeInputPullFilter, 1); // Init button pcb
+  GPIO_PinModeSet(gpioPortA, 14, gpioModeInputPullFilter, 1); // Init button pcb
 
   GPIO_PinModeSet(gpioPortE, 2, gpioModePushPull, 0);
   GPIO_PinModeSet(gpioPortE, 3, gpioModePushPull, 0);
