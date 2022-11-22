@@ -50,10 +50,6 @@ void initGPIO(void)
   GPIO_PinModeSet(gpioPortE, 2, gpioModePushPull, 0);
   GPIO_PinModeSet(gpioPortE, 3, gpioModePushPull, 0);
 
-  //test
-  GPIO_PinModeSet(gpioPortD, 1, gpioModeInputPullFilter, 1); // Init button pcb
-  GPIO_ExtIntConfig(gpioPortD, 1, 1, 0, 1, true);
-
 
 #else
   GPIO_PinModeSet(gpioPortF, 5, gpioModePushPull, 1); //Init LED pin PCB
