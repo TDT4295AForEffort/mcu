@@ -12,7 +12,7 @@ void GPIO_EVEN_IRQHandler(void)
   GPIO_IntClear(0xFFFF);
   if (counter - prev_counter < DEBOUNCE_TICKS) return;
   prev_counter = counter;
-  destroy_block();
+  place_block();
 #ifdef DEVBOARD
   GPIO_PinOutToggle(gpioPortE, 2);
 #else
@@ -25,7 +25,7 @@ void GPIO_ODD_IRQHandler(void)
   GPIO_IntClear(0xFFFF);
   if (counter - prev_counter < DEBOUNCE_TICKS) return;
   prev_counter = counter;
-  place_block();
+  destroy_block();
 #ifdef DEVBOARD
   GPIO_PinOutToggle(gpioPortE, 3);
 #else

@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 //comment out when on pcb
-#define DEVBOARD
+//#define DEVBOARD
 
 void setupSWOForPrint(void);
 void print_str(char str[]);

@@ -88,9 +88,9 @@ void app_process_action(void) {
   sample_view = sampleJoystick(adcSingleInputCh6);*/
 
    //sample joystick for pcb
-   sample_x = sampleJoystick(adcSingleInputCh4);
-   sample_y = 2048;//sampleJoystick(adcSingleInputCh4);
-   sample_view = sampleJoystick(adcSingleInputCh5);
+   sample_x = sampleJoystick(adcSingleInputCh0);
+   sample_y = sampleJoystick(adcSingleInputCh3);
+   sample_view = sampleJoystick(adcSingleInputCh4);
 
 
   // printConvertedJoystickSample(sample_x);
@@ -99,7 +99,7 @@ void app_process_action(void) {
   // printConvertedJoystickSample(sample_y);
   // ITM_SendChar(' ');
   const float dt = 0.01;
-  move_player(convertSample(sample_x), convertSample(sample_y), dt);
+  move_player(-convertSample(sample_x), -convertSample(sample_y), dt);
   turn_player(convertSample(sample_view), dt);
 
   // move_player(0.0, 1.0, dt);

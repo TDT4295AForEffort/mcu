@@ -5,8 +5,8 @@
 #include <stdbool.h>
 #define GAME_MAP_SIZE 16
 #define NUM_ENEMIES 2
-#define TURN_SPEED 0.8
-#define MOVE_SPEED 0.7
+#define TURN_SPEED 1.8
+#define MOVE_SPEED 1.7
 #define COLLISION_MARGIN 0
 
 typedef struct GameBlock {

@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 void turn_player(float amount, float dt) {
-  float rot_angle = -amount * TURN_SPEED * dt;
+  float rot_angle = amount * TURN_SPEED * dt;
   player.vision_angle += rot_angle;
   player.x_dir = cosf(player.vision_angle);
   player.y_dir = sinf(player.vision_angle);
@@ -146,7 +146,7 @@ void init_map() {
   // fill in random blocks
   for (int i = 1; i < GAME_MAP_SIZE - 1; i++) {
     for (int j = 1; j < GAME_MAP_SIZE - 1; j++) {
-      if (randomFloat() > 0.8) {
+      if (randomFloat() > 0.9) {
         game_map[i][j].state = 1;
       }
     }
