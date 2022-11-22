@@ -26,13 +26,13 @@ void move_player(float move_x, float move_y, float dt) {
     player.x_pos = x_new;
     player.y_pos = y_new;
   }
-  //check_enemy_collision();
+  check_enemy_collision();
 }
 
 void check_enemy_collision() { // Check if enemy is less than 0.5 away from you
   for (int i = 0; i < NUM_ENEMIES; i++) {
-    if (fabs(enemies[i].x_pos - player.x_pos) < 0.5 ||
-        fabs(enemies[i].y_pos - player.y_pos) < 0.5) {
+    if (fabs(enemies[i].x_pos - player.x_pos) < 0.1 &&
+        fabs(enemies[i].y_pos - player.y_pos) < 0.1) {
       game_over(); // reset game state to initial
     }
   }
@@ -46,8 +46,7 @@ void init_game() {
 
 void game_over() { init_game(); }
 
-// Make sure you are not so close to a wall so that you clip through it. (no
-// closer than 0.125)
+// Make sure you are not so close to a wall so that you clip through it
 bool check_block_collision(float x_pos, float y_pos) {
   int x_block_pos = x_pos;
   int y_block_pos = y_pos;
@@ -62,16 +61,16 @@ bool check_block_collision(float x_pos, float y_pos) {
     return true;
   }
   // check collisions with padding
-  if (fract_x < 0.125 && game_map[x_block_pos - 1][y_block_pos].state != 0) {
+  if (fract_x < COLLISION_MARGIN && game_map[x_block_pos - 1][y_block_pos].state != 0) {
     return true;
   }
-  if (fract_x > 0.875 && game_map[x_block_pos + 1][y_block_pos].state != 0) {
+  if (fract_x > (1-COLLISION_MARGIN) && game_map[x_block_pos + 1][y_block_pos].state != 0) {
     return true;
   }
-  if (fract_y > 0.125 && game_map[x_block_pos][y_block_pos - 1].state != 0) {
+  if (fract_y > COLLISION_MARGIN && game_map[x_block_pos][y_block_pos - 1].state != 0) {
     return true;
   }
-  if (fract_x > 0.875 && game_map[x_block_pos][y_block_pos + 1].state != 0) {
+  if (fract_x > (1-COLLISION_MARGIN) && game_map[x_block_pos][y_block_pos + 1].state != 0) {
     return true;
   }
 
@@ -141,13 +140,13 @@ void init_map() {
     game_map[i][GAME_MAP_SIZE - 1].state = 1;
   }
   // fill in random blocks
-  /*for (int i = 1; i < GAME_MAP_SIZE - 1; i++) {
+  for (int i = 1; i < GAME_MAP_SIZE - 1; i++) {
     for (int j = 1; j < GAME_MAP_SIZE - 1; j++) {
       if (randomFloat() > 0.8) {
         game_map[i][j].state = 1;
       }
     }
-  }*/
+  }
 }
 
 void init_enemies() {
@@ -165,8 +164,8 @@ void init_enemies() {
 
 void move_enemies(float dt) {
   for (int i = 0; i < NUM_ENEMIES; i++) {
-    float x_new = enemies[i].x_pos + enemies[i].x_dir * MOVE_SPEED/8 * dt;
-    float y_new = enemies[i].y_pos + enemies[i].y_dir * MOVE_SPEED/8 * dt;
+    float x_new = enemies[i].x_pos + enemies[i].x_dir * MOVE_SPEED/2 * dt;
+    float y_new = enemies[i].y_pos + enemies[i].y_dir * MOVE_SPEED/2 * dt;
     if (!check_block_collision(x_new, y_new)) {
       enemies[i].x_pos = x_new;
       enemies[i].y_pos = y_new;

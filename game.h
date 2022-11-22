@@ -7,6 +7,7 @@
 #define NUM_ENEMIES 2
 #define TURN_SPEED 0.8
 #define MOVE_SPEED 0.7
+#define COLLISION_MARGIN 0
 
 typedef struct GameBlock {
   // for now, state = 0 means air, state = 1 means wall
