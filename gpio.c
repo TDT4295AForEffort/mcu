@@ -28,7 +28,8 @@ void initGPIO(void)
   //GPIO_PinModeSet(gpioPortB, 9, gpioModeInputPullFilter, 1);
   //GPIO_PinModeSet(gpioPortB, 10, gpioModeInputPullFilter, 1);
 
-  GPIO_PinModeSet(gpioPortB, 12, gpioModeInputPullFilter, 1); // Init button pcb (one of two)
+  GPIO_PinModeSet(gpioPortB, 12, gpioModeInputPullFilter, 1); // Init button pcb
+  GPIO_PinModeSet(gpioPortA, 8, gpioModeInputPullFilter, 1); // Init button pcb
 
   GPIO_PinModeSet(gpioPortE, 2, gpioModePushPull, 0);
   GPIO_PinModeSet(gpioPortE, 3, gpioModePushPull, 0);
@@ -40,5 +41,7 @@ void initGPIO(void)
   //GPIO_ExtIntConfig(gpioPortB, 9, 9, 0, 1, true);
   //GPIO_ExtIntConfig(gpioPortB, 10, 10, 0, 1, true);
 
-  GPIO_ExtIntConfig(gpioPortB, 12, 12, 0, 1, true); // Pcb falling edge interrupt
+  // Pcb falling edge interrupt
+  GPIO_ExtIntConfig(gpioPortB, 12, 12, 0, 1, true);
+  GPIO_ExtIntConfig(gpioPortA, 14, 14, 0, 1, true);
 }
