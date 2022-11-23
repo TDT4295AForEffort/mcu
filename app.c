@@ -78,19 +78,11 @@ void app_init(void) {
  ******************************************************************************/
 void app_process_action(void) {
   counter++;
-  // Sample joystick in X-direction
-  /*sample_x = sampleJoystick(adcSingleInputCh5);
-
-  // Sample joystick in Y-direction
-  sample_y = sampleJoystick(adcSingleInputCh4);
-
-  // Sample joystick rotate
-  sample_view = sampleJoystick(adcSingleInputCh6);*/
 
    //sample joystick for pcb
-   sample_x = sampleJoystick(adcSingleInputCh0);
-   sample_y = sampleJoystick(adcSingleInputCh3);
-   sample_view = sampleJoystick(adcSingleInputCh4);
+  sample_x = sampleJoystick(adcSingleInputCh0);
+  sample_y = sampleJoystick(adcSingleInputCh3);
+  sample_view = sampleJoystick(adcSingleInputCh4);
 
 
   // printConvertedJoystickSample(sample_x);
