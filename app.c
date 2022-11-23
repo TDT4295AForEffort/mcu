@@ -67,9 +67,8 @@ void app_init(void) {
   SPI_setup(USART1_NUM, GPIO_POS0, true); //PCB MCU straight to FPGA
 #endif
   /* Setting up RX interrupt for master */
-  //SPI2_setupRXInt(NO_RX, NO_RX);
   SPI1_setupRXInt(NO_RX, NO_RX);
-  setupSWOForPrint();
+  //setupSWOForPrint(); //only needed when debugging on a devboard
 }
 
 /***************************************************************************/
@@ -79,85 +78,24 @@ void app_init(void) {
 void app_process_action(void) {
   counter++;
 
-   //sample joystick for pcb
+#ifdef DEVBOARD
+  sample_x = sampleJoystick(adcSingleInputCh5);
+  sample_y = sampleJoystick(adcSingleInputCh4);
+  sample_view = sampleJoystick(adcSingleInputCh6);
+#else
   sample_x = sampleJoystick(adcSingleInputCh0);
   sample_y = sampleJoystick(adcSingleInputCh3);
   sample_view = sampleJoystick(adcSingleInputCh4);
+#endif
 
-
-  // printConvertedJoystickSample(sample_x);
-  //ITM_SendChar('A');
-  //ITM_SendChar('\n');
-  // printConvertedJoystickSample(sample_y);
-  // ITM_SendChar(' ');
   const float dt = 0.01;
   move_player(-convertSample(sample_x), -convertSample(sample_y), dt);
   turn_player(convertSample(sample_view), dt);
 
-  // move_player(0.0, 1.0, dt);
-  // turn_player(convertSample(sample_y), dt);
   move_enemies(dt);
 
   // Fill transmit buffer with updated values of the game state
   populate_spi_transmit_buffer(0, (uint16_t)BUFFERSIZE, player, game_map,
                                enemies, transmitBuffer);
-  // For master to send
-  //USART2_sendBuffer(transmitBuffer, BUFFERSIZE); //Debug
   USART1_sendBuffer(transmitBuffer, BUFFERSIZE); //Regular
-  // ITM_SendChar('\n');
-  // memset(receiveBuffer, '\0', BUFFERSIZE);
-  // Application process.
-  if (counter % 100 == 0) {
-    ITM_SendChar(counter);
-    ITM_SendChar('\n');
-
-    //char buf[150];
-    /*print_str("dir x: ");
-    gcvt(player.x_dir, 6, buf);
-    print_str(buf);
-    ITM_SendChar(' ');
-    print_str("dir y: ");
-    gcvt(player.y_dir, 6, buf);
-    print_str(buf);
-    ITM_SendChar('\n');
-
-    printConvertedJoystickSample(sample_view);
-    ITM_SendChar('\n');
-    print_str("x pos: ");
-    gcvt(player.x_pos, 6, buf);
-    print_str(buf);
-    ITM_SendChar(' ');
-    print_str("fixed point as int: ");
-    snprintf(buf, 10, "%ld ", float_to_fixed(player.x_pos));
-    print_str(buf);
-    ITM_SendChar('\n');
-
-
-    print_str("y pos: ");
-    gcvt(player.y_pos, 6, buf);
-             print_str(buf);
-             ITM_SendChar(' ');
-             print_str("fixed point as int: ");
-             snprintf(buf, 10, "%ld ", float_to_fixed(player.y_pos));
-             print_str(buf);
-             ITM_SendChar('\n');*/
-    //print_gamestate();
-    //print_str(transmitBuffer);
-    //ITM_SendChar('\n');
-    // print_str("size of ")
-    // printJoystickSample(sample_x);
-    // ITM_SendChar(' ');
-    /*print_str("Joystick sample y: ");
-    printJoystickSample(sample_y);
-    ITM_SendChar('\n');*/
-    // player.y_pos = 1.0;
-    // c = 0;
-    /*for(int i = 532; i < 564; i++){ //20, 52 to get bitmap map
-        snprintf(buf, 6, "%02x ", transmitBuffer[i]);
-        print_str(buf);
-        ITM_SendChar('\n');
-    }
-
-    print_gamestate();*/
-  }
 }

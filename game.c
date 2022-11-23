@@ -80,17 +80,6 @@ bool check_block_collision(float x_pos, float y_pos) {
   return false;
 }
 
-//Not needed anymore because new block are placed 2 blocks away
-/*bool valid_block_creation(float player_x_pos, float player_y_pos, int block_x, int block_y){ //So you don't make a block you will collide with
-  if(player_x_pos < block_x+0.125 && player_x_pos > block_x-0.125 && player_y_pos < block_y+0.125 && player_y_pos > block_y-0.125){
-      return false;
-  }
-  else{
-      return true;
-  }
-}
-*/
-
 void modify_block(uint8_t state) {
 
   float x_ray = 0.1 * player.x_dir;
